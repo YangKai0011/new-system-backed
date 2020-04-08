@@ -9,8 +9,8 @@ var debug = require('debug')('pages:server');
 var http = require('http');
 
 //初始化数据库
-const init = require('../Dao/initDataBase');
-const inits = require('../Dao/initData');
+const init = require('../dao/initDataBase');
+const inits = require('../dao/initData');
 init();
 inits();
 
