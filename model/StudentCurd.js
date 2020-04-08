@@ -11,7 +11,7 @@ function callback(resolve, reject) {
 module.exports = {
   //按照宿舍号楼号查找所有成员
   findDormitory(param) {
-    const field = param.dormitoryNumber !== undefined && param.buildNumber !== undefined ? 'and' : 'or';
+    const field = param.dormitoryNumber !== 'undefined' && param.buildNumber !== 'undefined' ? 'and' : 'or';
     const sql = `select * from student where dormitoryNumber=? ${field} buildNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.dormitoryNumber, param.buildNumber], callback(resolve, reject));
@@ -20,7 +20,7 @@ module.exports = {
 
   //通过专业和年级查找宿舍成员
   findGradeAndProfession(param) {
-    const field = param.grade !== undefined && param.profession !== undefined ? 'and' : 'or';
+    const field = param.grade !== 'undefined' && param.profession !== 'undefined' ? 'and' : 'or';
     const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.grade, param.profession], callback(resolve, reject));
@@ -29,7 +29,7 @@ module.exports = {
 
   //通过宿管号,年级，专业，系别来查询学生信息
   findStub(param){
-    const field = param.grade !== undefined && param.profession !== undefined && param.department !== undefined ? 'and' : 'or';
+    const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
     const sql =  `SELECT  * FROM  student WHERE buildNumber=(SELECT stubNumber FROM stub WHERE accountNumber=?) and (grade=? ${field} profession=? ${field} department=?)`;
     return (promise = new Promise(function(resolve,reject){
       pool.query(sql, [param.accountNumber, param.grade, param.profession, param.department],callback(resolve, reject));
@@ -45,7 +45,7 @@ module.exports = {
 
   //通过宿管号,学号，姓名查询学生信息
   findStubNameAndId(param){
-    const field = param.studentNumber !== undefined && param.name !== undefined ? 'and' : 'or';
+    const field = param.studentNumber !== 'undefined' && param.name !== 'undefined' ? 'and' : 'or';
     const sql =  `SELECT  * FROM  student WHERE buildNumber=(SELECT stubNumber FROM stub WHERE accountNumber=?) and (studentNumber=? ${field} name=?)`;
     return (promise = new Promise(function(resolve,reject){
       pool.query(sql, [param.accountNumber, param.studentNumber, param.name],callback(resolve, reject));
