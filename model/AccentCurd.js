@@ -1,4 +1,4 @@
-const pool = require('../dao/operate');
+const pool = require('../dbunit/operate');
 const userCheckSql = `SELECT * FROM accents WHERE accent=? and password=?`;
 module.exports = {
   CheckAccent(param) {

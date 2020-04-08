@@ -9,10 +9,8 @@ var debug = require('debug')('pages:server');
 var http = require('http');
 
 //初始化数据库
-const init = require('../dao/initDataBase');
-const inits = require('../dao/initData');
+const init = require('../dbunit/initDataBase');
 init();
-inits();
 
 /**
  * Get port from environment and store in Express.

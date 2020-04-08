@@ -1,4 +1,4 @@
-const pool = require('../dao/operate');
+const pool = require('../dbunit/operate');
 
 function callback(resolve, reject) {
   return function (err, results, fields) {
