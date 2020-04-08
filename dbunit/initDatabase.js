@@ -35,6 +35,9 @@ module.exports = function () {
   });
   pool.query(createStudent, function (err, results, fields) {
     if (err) {
+      //suiyi
+      console.log('asdasd');
+      
       console.log(err);
     }
   });
