@@ -5,7 +5,7 @@ let createAccent = `create table if not exists accents(
   accent varchar(15) not null,
   password varchar(20) not null,
   role varchar(10)
-)ENGINE=INNODB DEFAULT CHARSET=latin1;`;
+)ENGINE=INNODB DEFAULT CHARSET=utf8;`;
 
 let createStudent = `create table if not exists student(
 	id int(11) PRIMARY KEY AUTO_INCREMENT,
@@ -25,7 +25,7 @@ let createStudent = `create table if not exists student(
 	fatherPhone varchar(11) COMMENT '父亲电话',
 	motherPhone varchar(11) COMMENT '母亲电话',
 	photo varchar(100) COMMENT '图片保存路径'
-)ENGINE=INNODB DEFAULT CHARSET=latin1;`;
+)ENGINE=INNODB DEFAULT CHARSET=utf8;`;
 
 module.exports = function () {
   pool.query(createAccent, function (err, results, fields) {
