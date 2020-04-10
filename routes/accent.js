@@ -17,7 +17,7 @@ router.post('/login', function (req, res, next) {
       };
       const token = tokenUtil.createToken(userInfo);
       //TODO 
-      res.json({ key: token },{role: user.role});
+      res.json({ key: token },{role: user.role},{accent: user.accent});
     }
   });
 });
