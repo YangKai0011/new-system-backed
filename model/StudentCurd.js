@@ -22,18 +22,18 @@ module.exports = {
   //通过专业和年级查找宿舍成员分布
   findGradeAndProfession(param) {
     const field = param.grade !== 'undefined' && param.profession !== 'undefined' ? 'and' : 'or';
-    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession=?`;
+    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession like '%软件%'`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.grade, param.profession], callback(resolve, reject));
     }));
   },
   //通过专业,年级,系别查找宿舍成员分布
-  //TOOD模糊查询 sql语句错误
+  //TOOD模糊查询 
   findGradeProfessionDepartment(param) {
     const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
-    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession=? ${field} department=?`;
+    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where department=? and (grade=? ${field} profession=?) `;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.grade, param.profession, param.department], callback(resolve, reject));
+      pool.query(sql, [param.positions,param.grade, param.profession], callback(resolve, reject));
     }));
   },
 
@@ -68,9 +68,10 @@ module.exports = {
   },
 
   //通过宿管号,学号，姓名查询学生信息
+
   findStubNameAndId(param) {
     const field = param.studentNumber !== 'undefined' && param.name !== 'undefined' ? 'and' : 'or';
-    const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (studentNumber=? ${field} name=?)`;
+    const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (studentNumber=? ${field} name=?)`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.positions, param.studentNumber, param.name], callback(resolve, reject));
     }));

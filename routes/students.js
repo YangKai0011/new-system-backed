@@ -88,7 +88,13 @@ function data(req, res) {
         }
         res.json(arr);
       } else {
-        res.json(results);
+        console.log(results.affectedRows);
+        if(results.affectedRows === 0){
+          res.json('false');
+        }else{
+          res.json('success');
+        }
+        
       }
     } else {
       console.log(data.err);
