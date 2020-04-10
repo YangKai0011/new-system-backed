@@ -26,7 +26,7 @@ router.get('/', function (req, res, next) {
         StudentCurd.findStubAndDormitoryNumber(param).then(data(req, res));
       } else if (param.grade || param.profession || param.department) {
         StudentCurd.findStub(param).then(data(req, res));
-      } else if (param.name || param.StudentNumber) {
+      } else if (param.name || param.studentNumber) {
         StudentCurd.findStubNameAndId(param).then(data(req, res));
       }
     }
@@ -79,7 +79,7 @@ function data(req, res) {
             } else {
               var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 父亲电话: null, 母亲电话: null };
             }
-          } else if (req.query.role === '宿管') { var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 导员姓名: null, 导员电话: null, 楼号: null, 宿舍号: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null }; }
+          } else if (req.query.role === '宿管') { var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 导员姓名: null, 导员电话: null, 宿舍号: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null }; }
 
           for (let j = 0; j < Object.values(results[i]).length; j++) {
             map[Object.keys(map)[j]] = Object.values(results[i])[j];

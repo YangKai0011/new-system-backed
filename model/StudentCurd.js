@@ -28,6 +28,7 @@ module.exports = {
     }));
   },
   //通过专业,年级,系别查找宿舍成员分布
+  //TOOD模糊查询 sql语句错误
   findGradeProfessionDepartment(param) {
     const field = param.grade !== 'undefined' && param.profession !== 'undefined'  && param.department !== 'undefined'? 'and' : 'or';
     const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession=? ${field} department=?`;
@@ -46,7 +47,7 @@ module.exports = {
   },
   //通过宿管号，宿舍号来查询学生信息
   findStubAndDormitoryNumber(param) {
-    const sql = 'SELECT studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and dormitoryNumber=?';
+    const sql = 'SELECT studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and dormitoryNumber=?';
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.positions, param.dormitoryNumber], callback(resolve, reject));
     }));
