@@ -11,7 +11,7 @@ function callback(resolve, reject) {
 module.exports = {
   //按照宿舍号楼号查找所有成员
   findDormitory(param) {
-    const field = param.dormitoryNumber !== 'undefined' && param.buildNumber !== 'undefined' ? 'and' : 'or'; 
+    const field = param.dormitoryNumber !== 'undefined' && param.buildNumber !== 'undefined' ? 'and' : 'or';
     const role = param.role === '学工部' ? 'NAME,department,profession,grade,phoneNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone' : 'studentNumber,NAME,department,profession,grade,class,phoneNumber,fatherPhone,motherPhone';
     const sql = `SELECT  ${role}  FROM student WHERE buildNumber=? ${field} dormitoryNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
@@ -30,7 +30,7 @@ module.exports = {
   //通过专业,年级,系别查找宿舍成员分布
   //TOOD模糊查询 sql语句错误
   findGradeProfessionDepartment(param) {
-    const field = param.grade !== 'undefined' && param.profession !== 'undefined'  && param.department !== 'undefined'? 'and' : 'or';
+    const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
     const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession=? ${field} department=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.grade, param.profession, param.department], callback(resolve, reject));
@@ -39,11 +39,25 @@ module.exports = {
 
   //通过宿管号,年级，专业，系别来查询学生信息
   findStub(param) {
-    const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
-    const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (grade=? ${field} profession=? ${field} department=?)`;
-    return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.positions, param.grade, param.profession, param.department], callback(resolve, reject));
-    }));
+    if (Object.keys(param).length === 6) {
+    console.log(Object.keys(param).length);
+      const positions = param.positions;
+      delete param.type;
+      delete param.role;
+      delete param.positions
+      let arr = Object.keys(param);
+      const index = arr.findIndex(item => param[item] === 'undefined');
+      const temp = arr[index];
+      arr.splice(index, 1);
+      arr.push(temp);
+      let sqlPinJie = arr[0] + '=? and ' + arr[1] + ' =? ' + ' or ' + arr[2] + '=?';
+      let sqlArr = [positions, param[arr[0]], param[arr[1]], param[arr[2]]];
+      const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
+      return (promise = new Promise(function (resolve, reject) {
+        pool.query(sql, sqlArr, callback(resolve, reject));
+      }));
+    }
+
   },
   //通过宿管号，宿舍号来查询学生信息
   findStubAndDormitoryNumber(param) {
