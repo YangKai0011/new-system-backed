@@ -24,7 +24,7 @@ router.post('/login', function (req, res, next) {
 
 router.get('/check', function (req, res, next) {
   let token = req.headers['authorization'];
-  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiYWNjZW50Ijoic3R1YjEiLCJyb2xlIjoic3R1YiIsImlhdCI6MTU4NjUwMjQ4OCwiZXhwIjoxNTg2NTg4ODg4fQ.JGuFONtw3HWLGLGZce3HCP2DaiMhn0RHzk5B-d3K4Ng'
+  //token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiYWNjZW50Ijoic3R1YjEiLCJyb2xlIjoic3R1YiIsImlhdCI6MTU4NjUwMjQ4OCwiZXhwIjoxNTg2NTg4ODg4fQ.JGuFONtw3HWLGLGZce3HCP2DaiMhn0RHzk5B-d3K4Ng'
   if (token) {
     const result = tokenUtil.checkToken(token);
     if (result[0]) {
