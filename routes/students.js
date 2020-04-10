@@ -37,7 +37,7 @@ router.get('/', function (req, res, next) {
         }
 
       case '2':
-        if (param.role === 'stub1') {
+        if (param.role !== 'admin' || param.role !== 'instruct') {
           if (!param.grade && !param.profession && !param.department) {
             res.send('no found right query');
             break;
