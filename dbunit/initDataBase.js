@@ -31,7 +31,7 @@ let createStudent = `create table if not exists student(
 //宿管账号信息表
 let createStub = `CREATE TABLE stub(
 	id INT(11) PRIMARY KEY AUTO_INCREMENT,
-	stubName vatchar(10) COMMENT '宿管员姓名',
+	stubName varchar(10) COMMENT '宿管员姓名',
 	stubNumber INT(11) COMMENT '宿管号',
 	accountNumber VARCHAR(16) COMMENT '账号',
 	PASSWORD VARCHAR(16) COMMENT '密码'
