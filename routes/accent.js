@@ -28,7 +28,7 @@ router.get('/check', function (req, res, next) {
   if (token) {
     const result = tokenUtil.checkToken(token);
     if (result[0]) {
-      res.json({ status: result[0], accent: result[1].accent, role: result[1].role});
+      res.json({ status: result[0],  role: result[1].role});
     } else {
       res.json({ status: false });
     }
