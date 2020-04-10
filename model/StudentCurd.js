@@ -12,7 +12,7 @@ module.exports = {
   //按照宿舍号楼号查找所有成员
   findDormitory(param) {
     const field = param.dormitoryNumber !== 'undefined' && param.buildNumber !== 'undefined' ? 'and' : 'or'; 
-    const role = param.role === 'admin' ? 'NAME,department,profession,grade,phoneNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone' : 'studentNumber,NAME,department,profession,grade,class,phoneNumber,fatherPhone,motherPhone';
+    const role = param.role === '学工部' ? 'NAME,department,profession,grade,phoneNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone' : 'studentNumber,NAME,department,profession,grade,class,phoneNumber,fatherPhone,motherPhone';
     const sql = `SELECT  ${role}  FROM student WHERE buildNumber=? ${field} dormitoryNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.buildNumber, param.dormitoryNumber], callback(resolve, reject));
@@ -25,6 +25,14 @@ module.exports = {
     const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.grade, param.profession], callback(resolve, reject));
+    }));
+  },
+  //通过专业,年级,系别查找宿舍成员分布
+  findGradeProfessionDepartment(param) {
+    const field = param.grade !== 'undefined' && param.profession !== 'undefined'  && param.department !== 'undefined'? 'and' : 'or';
+    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession=? ${field} department=?`;
+    return (promise = new Promise(function (resolve, reject) {
+      pool.query(sql, [param.grade, param.profession, param.department], callback(resolve, reject));
     }));
   },
 

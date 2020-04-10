@@ -28,14 +28,7 @@ let createStudent = `create table if not exists student(
 	motherPhone varchar(11) COMMENT '母亲电话',
 	photo varchar(100) COMMENT '图片保存路径'
 )ENGINE=INNODB DEFAULT CHARSET=utf8;`;
-//宿管账号信息表
-let createStub = `CREATE TABLE if not exists stub(
-	id INT(11) PRIMARY KEY AUTO_INCREMENT,
-	stubName varchar(10) COMMENT '宿管员姓名',
-	stubNumber INT(11) COMMENT '宿管号',
-	accountNumber VARCHAR(16) COMMENT '账号',
-	PASSWORD VARCHAR(16) COMMENT '密码'
-)ENGINE=INNODB DEFAULT CHARSET=utf8;`
+
 module.exports = function () {
   pool.query(createAccent, function (err, results, fields) {
     if (err) {
@@ -47,9 +40,5 @@ module.exports = function () {
       console.log(err);
     }
   });
-  pool.query(createStub, function(err, results, fields){
-    if(err){
-      console.log(err);
-    }
-  })
+
 };
