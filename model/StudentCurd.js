@@ -41,14 +41,14 @@ module.exports = {
     const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
     const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (grade=? ${field} profession=? ${field} department=?)`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.buildNumber, param.grade, param.profession, param.department], callback(resolve, reject));
+      pool.query(sql, [param.positions, param.grade, param.profession, param.department], callback(resolve, reject));
     }));
   },
   //通过宿管号，宿舍号来查询学生信息
   findStubAndDormitoryNumber(param) {
     const sql = 'SELECT studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and dormitoryNumber=?';
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.buildNumber, param.dormitoryNumber], callback(resolve, reject));
+      pool.query(sql, [param.positions, param.dormitoryNumber], callback(resolve, reject));
     }));
   },
 
@@ -57,7 +57,7 @@ module.exports = {
     const field = param.studentNumber !== 'undefined' && param.name !== 'undefined' ? 'and' : 'or';
     const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (studentNumber=? ${field} name=?)`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.buildNumber, param.studentNumber, param.name], callback(resolve, reject));
+      pool.query(sql, [param.positions, param.studentNumber, param.name], callback(resolve, reject));
     }));
   },
   //导员修改信息
