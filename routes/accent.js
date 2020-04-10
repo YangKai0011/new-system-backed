@@ -28,7 +28,7 @@ router.get('/check', function (req, res, next) {
   token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiYWNjZW50Ijoic3R1YjEiLCJyb2xlIjoi5a6_566hIiwicG9zaXRpb25zIjoiMSIsImlhdCI6MTU4NjUxODQwNSwiZXhwIjoxNTg2NjA0ODA1fQ.-4q-6xKD9Uq7Exwr6mbOrjmwYyYmKP3PVjLdq2Vguoc'
   if (token) {
     const result = tokenUtil.checkToken(token);
-    const arr = result[0] ? res.json({ status: result[0], role: result[1].role, positions: result[1].positions}) : res.json({ status: false });
+    const arr = result[0] ? res.json([ {status: result[0]}, {role: result[1].role, positions: result[1].positions}]) : res.json({ status: false });
     arr;
   } else {
     res.json({ status: false });
