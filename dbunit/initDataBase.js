@@ -2,7 +2,7 @@ const pool = require('./operate');
 
 //账户信息表
 let createAccent = `create table if not exists accents(
-  id int primary key auto_increment,
+  id int(11) primary key auto_increment,
   accent varchar(15) not null,
   password varchar(20) not null,
   role varchar(10)
@@ -29,13 +29,13 @@ let createStudent = `create table if not exists student(
 	photo varchar(100) COMMENT '图片保存路径'
 )ENGINE=INNODB DEFAULT CHARSET=utf8;`;
 //宿管账号信息表
-let createStub = `CREATE TABLE stub(
+/* let createStub = `CREATE TABLE stub(
 	id INT(11) PRIMARY KEY AUTO_INCREMENT,
 	stubName varchar(10) COMMENT '宿管员姓名',
 	stubNumber INT(11) COMMENT '宿管号',
 	accountNumber VARCHAR(16) COMMENT '账号',
 	PASSWORD VARCHAR(16) COMMENT '密码'
-)ENGINE=INNODB DEFAULT CHARSET=utf8;`
+)ENGINE=INNODB DEFAULT CHARSET=utf8;` */
 module.exports = function () {
   pool.query(createAccent, function (err, results, fields) {
     if (err) {
@@ -47,9 +47,9 @@ module.exports = function () {
       console.log(err);
     }
   });
-  pool.query(createStub, function(err, results, fields){
+ /*  pool.query(createStub, function(err, results, fields){
     if(err){
       console.log(err);
     }
-  })
+  }) */
 };

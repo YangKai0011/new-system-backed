@@ -26,7 +26,7 @@ router.get('/check', function (req, res, next) {
   let token = req.headers['authorization'];
   if (token) {
     const result = tokenUtil.checkToken(token);
-    res.json({ status: result });
+    res.json({ status: result },{role: token.role});
   } else {
     res.json({ status: false });
   }
