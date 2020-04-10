@@ -8,7 +8,7 @@ router.get('/', function (req, res, next) {
   if (param.type === 'search') {
     switch (param.mold) {
       case '0':
-        if (param.role === 'admin' || param.role === 'instruct') {
+        if (param.role === '学工部' || param.role === '导员') {
           //通过年级，专业，或二者组合来查找楼号和宿舍号
           if (!param.grade && !param.profession) {
             res.send('no found right query');
@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
           break;
         }
       case '1':
-        if (param.role === 'admin' || param.role === 'instruct') {
+        if (param.role === '学工部' || param.role === '导员') {
           //通过宿舍号，楼号或二者组合来查找学生信息
           if (!param.dormitoryNumber && !param.buildNumber) {
             res.send('no found right query');
@@ -37,7 +37,7 @@ router.get('/', function (req, res, next) {
         }
 
       case '2':
-        if (param.role !== 'admin' || param.role !== 'instruct') {
+        if (param.role !== '学工部' || param.role !== '导员') {
           if (!param.grade && !param.profession && !param.department) {
             res.send('no found right query');
             break;
@@ -51,7 +51,7 @@ router.get('/', function (req, res, next) {
           break;
         }
       case '3':
-        if (param.role === 'stub1') {
+        if (param.role === '宿管') {
           if (!param.dormitoryNumber && !param.name && !param.studentNumber) {//通过宿管号，宿舍号查询 || 学号姓名
             res.send('no found right query');
             break;
@@ -110,11 +110,11 @@ function data(req, res) {
       const results = data.results;
       if (req.query.mold === '1' || req.query.mold === '2' || req.query.mold === '3') {
         for (let i = 0; i < results.length; i++) {
-          if (req.query.role === 'admin') {
+          if (req.query.role === '学工部') {
             var map = { 姓名: null, 系名: null, 专业: null, 年级: null, 电话: null, 导员姓名: null, 导员电话: null, 宿舍长: null, 宿舍长电话: null };
-          } else if (req.query.role === 'instruct') {
+          } else if (req.query.role === '导员') {
             var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 父亲电话: null, 母亲电话: null };
-          } else if (req.query.role === 'stub1') { var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 导员姓名: null, 导员电话: null, 楼号: null, 宿舍号: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null }; }
+          } else if (req.query.role === '宿管') { var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 导员姓名: null, 导员电话: null, 楼号: null, 宿舍号: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null }; }
 
           for (let j = 0; j < Object.values(results[i]).length; j++) {
             map[Object.keys(map)[j]] = Object.values(results[i])[j];
