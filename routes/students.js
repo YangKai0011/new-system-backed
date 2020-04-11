@@ -23,6 +23,7 @@ router.get('/', function (req, res, next) {
       }
     } else if (param.role === '宿管') {
       if (param.dormitoryNumber) {
+        //通过宿舍号查询
         StudentCurd.findStubAndDormitoryNumber(param).then(data(req, res));
       } else if (param.grade || param.profession || param.department) {
         StudentCurd.findStub(param).then(data(req, res));
@@ -30,10 +31,7 @@ router.get('/', function (req, res, next) {
         StudentCurd.findStubNameAndId(param).then(data(req, res));
       }
     }
-  } /* else if (param.type === 'update') {
-    //导员修改信息 TODO
-    StudentCurd.updateMessage(param).then(data(req, res));
-  }  *//* else if (param.type === 'updateNull') {
+  } /* else if (param.type === 'updateNull') {
     //完善信息
     StudentCurd.insertMessage(param).then(data(req, res));
   } */ else if (param.type === 'delete') {
