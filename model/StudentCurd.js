@@ -15,7 +15,7 @@ module.exports = {
   //按照宿舍号楼号查找所有成员
   findDormitory(param) {
     const field = param.dormitoryNumber !== 'undefined' && param.buildNumber !== 'undefined' ? 'and' : 'or';
-    const role = param.role === '学工部' ? 'NAME,department,profession,grade,phoneNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone' : 'studentNumber,NAME,department,profession,grade,class,phoneNumber,fatherPhone,motherPhone';
+    const role = param.role === 'Controller' ? 'NAME,department,profession,grade,phoneNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone' : 'studentNumber,NAME,department,profession,grade,class,phoneNumber,fatherPhone,motherPhone';
     const sql = `SELECT  ${role}  FROM student WHERE buildNumber=? ${field} dormitoryNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.buildNumber, param.dormitoryNumber], callback(resolve, reject));
@@ -66,7 +66,7 @@ module.exports = {
         sqlPinJie = temp + '=?';
         sqlArr = [positions, param[temp]];
       }
-      param['type'] = 'search'; param['role'] = '宿管'; param['positions'] = positions;
+      param['type'] = 'search'; param['role'] = 'House'; param['positions'] = positions;
       const sql = `SELECT  ${filed} FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
       return (promise = new Promise(function (resolve, reject) {
         pool.query(sql, sqlArr, callback(resolve, reject));
