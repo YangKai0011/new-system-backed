@@ -112,9 +112,9 @@ function data(req, res) {
           }
           arr[i] = map;
         }
-        res.json(arr);
+        res.json({status: true, data: arr});
       } else {
-        results.affectedRows === 0 ? res.json('false') : res.json('success');
+        results.affectedRows === 0 ? res.json({status: false}) : res.json({status: success});
       }
     } else {
       res.send(data.err);
