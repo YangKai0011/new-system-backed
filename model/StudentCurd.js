@@ -15,7 +15,7 @@ module.exports = {
   //按照宿舍号楼号查找所有成员
   findDormitory(param) {
     const field = param.dormitoryNumber !== 'undefined' && param.buildNumber !== 'undefined' ? 'and' : 'or';
-    const role = param.role === 'Controller' ? 'NAME,department,profession,grade,phoneNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone' : 'studentNumber,NAME,department,profession,grade,class,phoneNumber,fatherPhone,motherPhone';
+    const role = param.role === 'Controller' ? 'NAME,department,profession,grade,phoneNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone' : 'studentNumber,NAME,department,profession,grade,class,phoneNumber,buildNumber,dormitoryNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone';
     const sql = `SELECT  ${role}  FROM student WHERE buildNumber=? ${field} dormitoryNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.buildNumber, param.dormitoryNumber], callback(resolve, reject));

@@ -88,6 +88,25 @@ router.post('/instructInsert', function (req, res) {
 
 function data(req, res) {
   return function (data) {
+   /*  var map = {};
+    console.log(Object.keys(data.results[0])[0]);
+    console.log(Object.values(data.results).length);
+    console.log('111111111111');
+    const keyArr = Object.keys(data.results[0]);
+    //const length = Object.keys(data.results[0]).length;
+   const valueArr = Object.values(data.results[0]);
+   
+   
+    for(let i = 0; i < Object.keys(data.results[0]).length; i++){
+          map[Object.keys(data.results[0])[i]] = null;
+    }
+    console.log(map); */
+    
+    
+    
+    
+    
+    
     let arr = [];
     if (!data.err) {
       const results = data.results;
@@ -97,13 +116,13 @@ function data(req, res) {
             if (req.query.grade || req.query.profession) {
               var map = { 楼号: null, 宿舍号: null };
             } else {
-              var map = { 姓名: null, 系名: null, 专业: null, 年级: null, 电话: null, 导员姓名: null, 导员电话: null, 宿舍长: null, 宿舍长电话: null };
+              var map = { 姓名: null, 系名: null, 专业: null, 年级: null, 电话: null,导员姓名: null, 导员电话: null, 宿舍长: null, 宿舍长电话: null };
             }
           } else if (req.query.role === 'Instructor') {
             if (req.query.grade || req.query.profession || req.query.department) {
               var map = { 楼号: null, 宿舍号: null };
             } else {
-              var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 父亲电话: null, 母亲电话: null };
+              var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null,楼号: null ,宿舍号: null,导员姓名: null, 导员电话: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null };
             }
           } else if (req.query.role === 'House') { var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 导员姓名: null, 导员电话: null, 宿舍号: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null }; }
 
@@ -112,9 +131,14 @@ function data(req, res) {
           }
           arr[i] = map;
         }
-        res.json({status: true, data: arr});
+        if(req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber)){
+          res.json({status: true, data: arr, modify: 'buildNumber,dormitoryNumber,instructName,instructPhone,dormitoryLeader,LeaderPhone'});
+        }else{
+          res.json({status: true, data: arr});
+        }
+        
       } else {
-        results.affectedRows === 0 ? res.json({status: false}) : res.json({status: success});
+        results.affectedRows === 0 ? res.json({status: false}) : res.json({status: true});
       }
     } else {
       res.send(data.err);
