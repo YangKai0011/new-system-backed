@@ -21,43 +21,56 @@ module.exports = {
 
   //通过专业和年级查找宿舍成员分布
   findGradeAndProfession(param) {
+    //模糊查询
+    const profession = param.profession
     const field = param.grade !== 'undefined' && param.profession !== 'undefined' ? 'and' : 'or';
-    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession like '%软件%'`;
+    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where grade=? ${field} profession like '%${profession}%'`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.grade, param.profession], callback(resolve, reject));
+      pool.query(sql, [param.grade], callback(resolve, reject));
     }));
   },
   //通过专业,年级,系别查找宿舍成员分布
-  //TOOD模糊查询 
   findGradeProfessionDepartment(param) {
+    const profession = param.profession;//模糊查询
     const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
-    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where department=? and (grade=? ${field} profession=?) `;
+    const sql = `select DISTINCT buildNumber, dormitoryNumber from student where department=? and (grade=? ${field} profession like '%${profession}%')`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.positions,param.grade, param.profession], callback(resolve, reject));
+      pool.query(sql, [param.positions, param.grade], callback(resolve, reject));
     }));
   },
 
   //通过宿管号,年级，专业，系别来查询学生信息
   findStub(param) {
     if (Object.keys(param).length === 6) {
-    console.log(Object.keys(param).length);
+      let sqlPinJie = null; let sqlArr = [];
       const positions = param.positions;
-      delete param.type;
-      delete param.role;
-      delete param.positions
+      //删除无关的键值对
+      delete param.type; delete param.role; delete param.positions
       let arr = Object.keys(param);
-      const index = arr.findIndex(item => param[item] === 'undefined');
-      const temp = arr[index];
-      arr.splice(index, 1);
-      arr.push(temp);
-      let sqlPinJie = arr[0] + '=? and ' + arr[1] + ' =? ' + ' or ' + arr[2] + '=?';
-      let sqlArr = [positions, param[arr[0]], param[arr[1]], param[arr[2]]];
+      const index = arr.filter(item => param[item] === 'undefined');
+      if (index.length === 0) {
+        sqlPinJie = arr[0] + '=? and ' + arr[1] + ' =? ' + ' and ' + arr[2] + '=?';
+        sqlArr = [positions, param[arr[0]], param[arr[1]], param[arr[2]]];
+      } else if (index.length === 1) {
+        const temp = arr.findIndex(item => param[item] === 'undefined');
+        const tem = arr[temp];
+        arr.splice(temp, 1);
+        arr.push(tem);
+        sqlPinJie = arr[0] + '=? and ' + arr[1] + ' =? ';
+        sqlArr = [positions, param[arr[0]], param[arr[1]]]
+      } else {
+        const temp = arr.filter(item => param[item] !== 'undefined');
+        sqlPinJie = temp + '=?';
+        sqlArr = [positions, param[temp]];
+      }
+      param['type'] = 'search'; param['role'] = '宿管'; param['positions'] = positions;
+      console.log(sqlPinJie);
+      console.log(sqlArr);
       const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
       return (promise = new Promise(function (resolve, reject) {
         pool.query(sql, sqlArr, callback(resolve, reject));
       }));
     }
-
   },
   //通过宿管号，宿舍号来查询学生信息
   findStubAndDormitoryNumber(param) {
@@ -68,12 +81,12 @@ module.exports = {
   },
 
   //通过宿管号,学号，姓名查询学生信息
-
   findStubNameAndId(param) {
+    const name = param.name;
     const field = param.studentNumber !== 'undefined' && param.name !== 'undefined' ? 'and' : 'or';
-    const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (studentNumber=? ${field} name=?)`;
+    const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (studentNumber=? ${field} name like '%${name}%')`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.positions, param.studentNumber, param.name], callback(resolve, reject));
+      pool.query(sql, [param.positions, param.studentNumber], callback(resolve, reject));
     }));
   },
   //导员修改信息
@@ -102,8 +115,49 @@ module.exports = {
   },
 
   //导员导入信息
-  insertByInstruct(param) {
+  insertByInstruct(param,callback) {
+    console.log(param);
     const sql = 'insert into student(studentNUmber, name, department, profession, grade, class) values(?,?,?,?,?,?)';
-    pool.query(sql, param);
+    pool.getConnection(function (err, conn) {
+      if (err) throw err;
+      conn.beginTransaction(function (err) {
+        try {
+          if (err) throw err;
+          conn.query(sql, param, function (err, results) {
+            if (err) {
+              console.log(err);
+              console.log(err.sql);
+              //回滚事务
+              conn.rollback(function () {
+                return callback(err.sql);
+              });
+            } else {              
+              console.log('提交事务');
+              conn.commit(function () {
+              console.log('success');
+              });
+            }
+          });
+        } finally {
+            conn.release(); 
+            
+        }
+      });
+    });
+
+
+  },
+  //导员单个插入信息
+  insertByOne(param) {
+    console.log(param);
+    let arr = [];
+    for(let i = 0; i < Object.keys(param).length; i++){
+      arr[i] = Object.values(param)[i];
+    }
+    console.log(arr);
+    const sql = 'INSERT INTO student(studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);';
+    return (promise = new Promise(function (resolve, reject) {
+      pool.query(sql, arr, callback(resolve, reject));
+    }));
   }
 };

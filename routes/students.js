@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
         StudentCurd.findDormitory(param).then(data(req, res));
       }
     } else if (param.role === '导员') {
-      if (param.grade || param.profession || param.department) {
+      if (param.grade || param.profession) {
         //按年级系别专业查询
         StudentCurd.findGradeProfessionDepartment(param).then(data(req, res));
       } else {
@@ -30,13 +30,13 @@ router.get('/', function (req, res, next) {
         StudentCurd.findStubNameAndId(param).then(data(req, res));
       }
     }
-  } else if (param.type === 'update') {
-    //导员修改信息
+  } /* else if (param.type === 'update') {
+    //导员修改信息 TODO
     StudentCurd.updateMessage(param).then(data(req, res));
-  } else if (param.type === 'updateNull') {
+  }  *//* else if (param.type === 'updateNull') {
     //完善信息
     StudentCurd.insertMessage(param).then(data(req, res));
-  } else if (param.type === 'delete') {
+  } */ else if (param.type === 'delete') {
     //删除信息
     StudentCurd.deleteByStudentNumber(param).then(data(req, res));
   } else if (param.type === 'insert') {//导员导入信息
@@ -44,20 +44,33 @@ router.get('/', function (req, res, next) {
       if (!data.err) {
         for (let i in data) {
           let arr = [];
-          console.log(Object.values(data[i]));
           for (let j in Object.values(data[i])) {
             arr[j] = Object.values(data[i])[j];
           }
-          StudentCurd.insertByInstruct(arr);
+          StudentCurd.insertByInstruct(arr, function(err){
+            if(err){
+              res.send(err);
+            }
+          });
+          res.send('success');
         }
-        res.send('导入成功！');
       } else {
         console.log(data.err);
       }
-
-
     });
   }
+});
+
+//导员修改信息
+router.post('/update', function(req, res){
+  StudentCurd.updateMessage(param).then(data(req, res));
+});
+
+//导员新增学生信息单条插入 无插入值时如遇楼号和宿舍号必须返回NULL其余随意
+router.post('/instructInsert', function (req, res) {
+  const param = req.body;
+  //插入单个信息
+  StudentCurd.insertByOne(param).then(data(req, res));
 });
 
 function data(req, res) {
@@ -88,13 +101,11 @@ function data(req, res) {
         }
         res.json(arr);
       } else {
-        console.log(results.affectedRows);
-        if(results.affectedRows === 0){
+        if (results.affectedRows === 0) {
           res.json('false');
-        }else{
+        } else {
           res.json('success');
         }
-        
       }
     } else {
       console.log(data.err);
