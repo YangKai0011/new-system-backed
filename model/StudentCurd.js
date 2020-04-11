@@ -11,7 +11,7 @@ let filed = 'studentNumber,NAME,department,profession,grade,class,phoneNumber,in
 
 
 module.exports = {
-  
+
   //按照宿舍号楼号查找所有成员
   findDormitory(param) {
     const field = param.dormitoryNumber !== 'undefined' && param.buildNumber !== 'undefined' ? 'and' : 'or';
@@ -38,7 +38,7 @@ module.exports = {
     const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
     const sql = `select DISTINCT buildNumber, dormitoryNumber from student where department=? and (grade=? ${field} profession like '%${profession}%')`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.department, param.grade], callback(resolve, reject));
+      pool.query(sql, [param.positions, param.grade], callback(resolve, reject));
     }));
   },
 
@@ -50,8 +50,24 @@ module.exports = {
       //删除无关的键值对
       delete param.type; delete param.role; delete param.positions
       let arr = Object.keys(param);
-      const index = arr.filter(item => param[item] === 'undefined');
-      if (index.length === 0) {
+      const index = arr.filter(item => param[item] !== 'undefined');
+      //console.log(index);
+      switch (index.length) {
+        case 1:
+          sqlPinJie = index + '=?';
+          sqlArr = [positions, param[index]];
+          break;
+        case 2:
+          sqlPinJie = index[0] + '=? and ' + index[1] + '=? ';
+          sqlArr = [positions, param[index[0]], param[index[1]]];
+          break;
+        case 3:
+          sqlPinJie = index[0] + '=? and ' + index[1] + ' =? ' + ' and ' + index[2] + '=?';
+          sqlArr = [positions, param[index[0]], param[index[1]], param[index[2]]];
+          break;
+      }
+      param['type'] = 'search'; param['role'] = 'House'; param['positions'] = positions;
+      /* if (index.length === 0) {
         sqlPinJie = arr[0] + '=? and ' + arr[1] + ' =? ' + ' and ' + arr[2] + '=?';
         sqlArr = [positions, param[arr[0]], param[arr[1]], param[arr[2]]];
       } else if (index.length === 1) {
@@ -65,8 +81,9 @@ module.exports = {
         const temp = arr.filter(item => param[item] !== 'undefined');
         sqlPinJie = temp + '=?';
         sqlArr = [positions, param[temp]];
-      }
-      param['type'] = 'search'; param['role'] = 'House'; param['positions'] = positions;
+      } */
+     
+
       const sql = `SELECT  ${filed} FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
       return (promise = new Promise(function (resolve, reject) {
         pool.query(sql, sqlArr, callback(resolve, reject));
@@ -116,7 +133,7 @@ module.exports = {
   },
 
   //导员导入信息
-  insertByInstruct(param,callback) {
+  insertByInstruct(param, callback) {
     console.log(param);
     const sql = 'insert into student(studentNUmber, name, department, profession, grade, class) values(?,?,?,?,?,?)';
     pool.getConnection(function (err, conn) {
@@ -132,16 +149,16 @@ module.exports = {
               conn.rollback(function () {
                 return callback(err.sql);
               });
-            } else {              
+            } else {
               console.log('提交事务');
               conn.commit(function () {
-              console.log('success');
+                console.log('success');
               });
             }
           });
         } finally {
-            conn.release(); 
-            
+          conn.release();
+
         }
       });
     });
@@ -152,7 +169,7 @@ module.exports = {
   insertByOne(param) {
     console.log(param);
     let arr = [];
-    for(let i = 0; i < Object.keys(param).length; i++){
+    for (let i = 0; i < Object.keys(param).length; i++) {
       arr[i] = Object.values(param)[i];
     }
     console.log(arr);
