@@ -76,7 +76,7 @@ function data(req, res) {
     let arr = [];
     if (!data.err) {
       const results = data.results;
-      if (req.query.role === '学工部' || req.query.role === '导员' || req.query.role === '宿管') {
+        if(req.query.type === 'search'){
         for (let i = 0; i < results.length; i++) {
           if (req.query.role === '学工部') {
             if (req.query.grade || req.query.profession) {
@@ -106,7 +106,7 @@ function data(req, res) {
         }
       }
     } else {
-      console.log(data.err);
+      res.send(data.err);
     }
   };
 }
