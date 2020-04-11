@@ -60,6 +60,13 @@ router.get('/', function (req, res, next) {
 });
 
 //导员批量导入信息
+/* router.post('/insert', multer({
+  dest: 'public/xlsx'
+}).single('file'), function(req, res, next){
+  if(req.file.length === 0){
+    return res.json({error : '上传文件不能为空'});
+  }
+}) */
 
 //导员修改信息
 router.post('/update', function(req, res){
