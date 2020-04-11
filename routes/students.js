@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const StudentCurd = require('../model/StudentCurd');
+const multer = require('multer');
 const excel = require('../lib/excel-utils');
 router.get('/', function (req, res, next) {
   const param = req.query;
@@ -65,6 +66,8 @@ router.get('/', function (req, res, next) {
 }).single('file'), function(req, res, next){
   if(req.file.length === 0){
     return res.json({error : '上传文件不能为空'});
+  }else{
+    res.json('success');
   }
 }) */
 
