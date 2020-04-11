@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
         StudentCurd.findDormitory(param).then(data(req, res));
       }
     } else if (param.role === '导员') {
-      if (param.grade || param.profession) {
+      if (param.grade || param.profession || param.department) {
         //按年级系别专业查询
         StudentCurd.findGradeProfessionDepartment(param).then(data(req, res));
       } else {
@@ -37,7 +37,7 @@ router.get('/', function (req, res, next) {
   } */ else if (param.type === 'delete') {
     //删除信息
     StudentCurd.deleteByStudentNumber(param).then(data(req, res));
-  } else if (param.type === 'insert') {//导员导入信息
+  } /* else if (param.type === 'insert') {//导员导入信息
     excel('text.xlsx', function (data) {
       if (!data.err) {
         for (let i in data) {
@@ -56,8 +56,10 @@ router.get('/', function (req, res, next) {
         console.log(data.err);
       }
     });
-  }
+  } */
 });
+
+//导员批量导入信息
 
 //导员修改信息
 router.post('/update', function(req, res){
@@ -98,12 +100,8 @@ function data(req, res) {
           arr[i] = map;
         }
         res.json(arr);
-      } else {
-        if (results.affectedRows === 0) {
-          res.json('false');
-        } else {
-          res.json('success');
-        }
+      }else {
+        results.affectedRows === 0 ? res.json('false') : res.json('success');
       }
     } else {
       res.send(data.err);

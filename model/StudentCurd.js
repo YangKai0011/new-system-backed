@@ -38,7 +38,7 @@ module.exports = {
     const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
     const sql = `select DISTINCT buildNumber, dormitoryNumber from student where department=? and (grade=? ${field} profession like '%${profession}%')`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.positions, param.grade], callback(resolve, reject));
+      pool.query(sql, [param.department, param.grade], callback(resolve, reject));
     }));
   },
 
@@ -67,14 +67,13 @@ module.exports = {
         sqlArr = [positions, param[temp]];
       }
       param['type'] = 'search'; param['role'] = '宿管'; param['positions'] = positions;
-      const sql = `SELECT  studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
+      const sql = `SELECT  ${filed} FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
       return (promise = new Promise(function (resolve, reject) {
         pool.query(sql, sqlArr, callback(resolve, reject));
       }));
     }
   },
   //通过宿管号，宿舍号来查询学生信息
-  //TODO
   findStubAndDormitoryNumber(param) {
     const sql = `SELECT ${filed} FROM  student WHERE buildNumber=? and dormitoryNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
