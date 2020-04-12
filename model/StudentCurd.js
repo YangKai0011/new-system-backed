@@ -109,14 +109,26 @@ module.exports = {
   },
   //导员修改信息TODO
   updateMessage(param) {
-    /* let sqlArr = [];
-    for(let i =0; i < param.length; i++){
-      for(let j)
-    } */
-    const sql = 'update student set department=?,profession=?,grade=?,class=?,phoneNumber=?,fatherPhone=?,motherPhone=?,buildNumber=?,dormitoryNumber=?,instructName=?,instructPhone=?,dormitoryLeader=?,LeaderPhone=? where studentNumber=?';
+    let sqlPinjies = [];
+    let sqlPinjie;
+    let sqlArr = [];
+    for(let i = 0; i < param.length; i++){
+      let arr = Object.keys(param[i]);
+      for(let j = 0; j < arr.length; j++){
+          sqlPinjie += arr[j];
+          sqlArr = Object.values(param[i])[j];
+          if(j !== arr.length -1){
+            sqlPinjie += ',';
+          }
+      }
+      sqlPinjies[i] = sqlPinjie;
+    }
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.department, param.profession, param.grade, param.class, param.phoneNumber, param.fatherPhone, param.motherphone, param.buildNumber, param.dormitoryNumber, param.instructName, param.instructPhone, param.dormitoryLeader, param.LeaderPhone, param.studentNumber],
-        callback(resolve, reject));
+      for(let i =0; i < sqlPinjies.length; i++){
+        const sql = `update student set ${sqlPinje} where studentNumber=?`;
+        pool.query(sql, sqlArr,
+          callback(resolve, reject));
+      }
     }));
 
   },
@@ -128,7 +140,7 @@ module.exports = {
     }));
   },
 
-  //删除学生信息TODO
+  //删除学生信息
   deleteByStudentNumber(param) {
     let sqlPinJie = param[0] + ',';
     for(let i = 1; i < param.length; i++){

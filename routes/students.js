@@ -123,25 +123,25 @@ function data(req, res) {
         for (let i = 0; i < results.length; i++) {
           if (req.query.role === 'Controller') {
             if (req.query.grade || req.query.profession) {
-              var map = { 楼号: null, 宿舍号: null };
+              var map = { buildNumber: null, dormitoryNumber: null };
             } else {
-              var map = { 姓名: null, 系名: null, 专业: null, 年级: null, 电话: null,导员姓名: null, 导员电话: null, 宿舍长: null, 宿舍长电话: null };
+              var map = { name: null, department: null, profession: null, grade: null, phoneNumber: null,instructName: null, instructPhone: null, dormitoryLeader: null, LeaderPhone: null };
             }
           } else if (req.query.role === 'Instructor') {
             if (req.query.grade || req.query.profession || req.query.department) {
-              var map = { 楼号: null, 宿舍号: null };
+              var map = { buildNumber: null, dormitoryNumber: null };
             } else {
-              var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null,楼号: null ,宿舍号: null,导员姓名: null, 导员电话: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null };
+              var map = { studentNumber: null, name: null, department: null, profession: null, grade: null, class: null, phoneNumber: null,buildNumber: null ,dormitoryNumber: null,instructName: null, instructPhone: null, dormitoryLeader: null, LeaderPhone: null, fatherPhone: null, motherPhone: null };
             }
-          } else if (req.query.role === 'House') { var map = { 学号: null, 姓名: null, 系名: null, 专业: null, 年级: null, 班级: null, 电话: null, 导员姓名: null, 导员电话: null, 宿舍号: null, 宿舍长: null, 宿舍长电话: null, 父亲电话: null, 母亲电话: null }; }
+          } else if (req.query.role === 'House') { var map = { studentNumber: null, name: null, department: null, profession: null, grade: null, class: null, phoneNumber: null, instructName: null, instructPhone: null, dormitoryNumber: null, dormitoryLeader: null, LeaderPhone: null, fatherPhone: null, motherPhone: null }; }
 
           for (let j = 0; j < Object.values(results[i]).length; j++) {
             map[Object.keys(map)[j]] = Object.values(results[i])[j];
           }
           arr[i] = map;
         }
-        let number = ['年级','专业','班级','电话','父亲电话','母亲电话','楼号','宿舍号','导员姓名','导员电话','宿舍长','宿舍长电话'];
-        let numbers = ['学号', '姓名', '系名','年级','专业','班级','电话','父亲电话','母亲电话']
+        let number = ['grade','profession','class','phoneNumber','fatherPhone','motherPhone','buildNumber','dormitoryNumber','instructName','instructPhone','dormitoryLeader','LeaderPhone'];
+        let numbers = ['studentNumber', 'name', 'department','grade','profession','class','phoneNumber','fatherPhone','motherPhone']
         
         if(req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber)){
           res.json({status: true, data: arr, invariable:numbers, modify: number});
