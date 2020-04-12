@@ -125,7 +125,7 @@ function data(req, res) {
       console.log(results);
       if (req.query.type === 'search') {
         let modify = ['grade','profession','class','phoneNumber','fatherPhone','motherPhone','buildNumber','dormitoryNumber','instructName','instructPhone','dormitoryLeader','LeaderPhone'];
-        let invariable = ['studentNumber', 'name', 'department','profession','grade','class','phoneNumber','fatherPhone','motherPhone']
+        let invariable = ['studentNumber', 'NAME', 'department','profession','grade','class','phoneNumber','fatherPhone','motherPhone']
         const status = req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({status: true, data: results, invariable:invariable, modify: modify}) : res.json({status: true, data: results});
         status;
       } else {
