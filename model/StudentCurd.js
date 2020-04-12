@@ -8,8 +8,6 @@ function callback(resolve, reject) {
 }
 //宿管需要查询的信息
 let filed = 'studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone';
-
-
 module.exports = {
 
   //按照宿舍号楼号查找所有成员
@@ -35,7 +33,7 @@ module.exports = {
   //通过专业,年级,系别查找宿舍成员分布
   findGradeProfessionDepartment(param) {
     const profession = param.profession;//模糊查询
-    const field = param.grade !== 'undefined' && param.profession !== 'undefined' && param.department !== 'undefined' ? 'and' : 'or';
+    const field = param.grade !== 'undefined' && param.profession !== 'undefined' ? 'and' : 'or';
     const sql = `select DISTINCT buildNumber, dormitoryNumber from student where department=? and (grade=? ${field} profession like '%${profession}%')`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.positions, param.grade], callback(resolve, reject));
@@ -50,9 +48,6 @@ module.exports = {
       //删除无关的键值对
       delete param.type; delete param.role; delete param.positions
       let arr = Object.keys(param);
-      console.log(arr);
-      console.log('1111111111111');
-
       const index = arr.filter(item => param[item] !== 'undefined');
       console.log(index);
       switch (index.length) {
@@ -70,22 +65,6 @@ module.exports = {
           break;
       }
       param['type'] = 'search'; param['role'] = 'House'; param['positions'] = positions;
-      /* if (index.length === 0) {
-        sqlPinJie = arr[0] + '=? and ' + arr[1] + ' =? ' + ' and ' + arr[2] + '=?';
-        sqlArr = [positions, param[arr[0]], param[arr[1]], param[arr[2]]];
-      } else if (index.length === 1) {
-        const temp = arr.findIndex(item => param[item] === 'undefined');
-        const tem = arr[temp];
-        arr.splice(temp, 1);
-        arr.push(tem);
-        sqlPinJie = arr[0] + '=? and ' + arr[1] + ' =? ';
-        sqlArr = [positions, param[arr[0]], param[arr[1]]]
-      } else {
-        const temp = arr.filter(item => param[item] !== 'undefined');
-        sqlPinJie = temp + '=?';
-        sqlArr = [positions, param[temp]];
-      } */
-
       const sql = `SELECT  ${filed} FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
       return (promise = new Promise(function (resolve, reject) {
         pool.query(sql, sqlArr, callback(resolve, reject));
@@ -104,7 +83,7 @@ module.exports = {
   findStubNameAndId(param) {
     const name = param.name;
     const field = param.studentNumber !== 'undefined' && param.name !== 'undefined' ? 'and' : 'or';
-    const sql = `SELECT ${field} FROM  student WHERE buildNumber=? and (studentNumber=? ${field} name like '%${name}%')`;
+    const sql = `SELECT * FROM  student WHERE buildNumber=? and (studentNumber=? ${field} name like '%${name}%')`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.positions, param.studentNumber], callback(resolve, reject));
     }));

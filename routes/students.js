@@ -120,33 +120,14 @@ router.post('/instructInsert', function (req, res) {
 //TODO
 function data(req, res) {
   return function (data) {
-    var map = {};
-    console.log(Object.keys(data.results[0])[0]);
-    console.log(Object.values(data.results).length);
-    for(let i = 0; i < Object.keys(data.results[0]).length; i++){
-          map[Object.keys(data.results[0])[i]] = null;
-    }
-    console.log(map);
-
-    let arr = [];
     if (!data.err) {
       const results = data.results;
+      console.log(results);
       if (req.query.type === 'search') {
-        for (let i = 0; i < results.length; i++) {
-          for (let j = 0; j < Object.values(results[i]).length; j++) {
-            map[Object.keys(map)[j]] = Object.values(results[i])[j];
-          }
-          arr[i] = map;
-        }
         let modify = ['grade','profession','class','phoneNumber','fatherPhone','motherPhone','buildNumber','dormitoryNumber','instructName','instructPhone','dormitoryLeader','LeaderPhone'];
         let invariable = ['studentNumber', 'name', 'department','profession','grade','class','phoneNumber','fatherPhone','motherPhone']
-        
-        if(req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber)){
-          res.json({status: true, data: arr, invariable:invariable, modify: modify});
-        }else{
-          res.json({status: true, data: arr});
-        }
-        
+        const status = req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({status: true, data: results, invariable:invariable, modify: modify}) : res.json({status: true, data: results});
+        status;
       } else {
         results.affectedRows === 0 ? res.json({status: false}) : res.json({status: true});
       }
