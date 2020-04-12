@@ -134,7 +134,7 @@ function data(req, res) {
           arr[i] = map;
         }
         let number = ['年级','专业','班级','电话','父亲电话','母亲电话','楼号','宿舍号','导员姓名','导员电话','宿舍长','宿舍长电话'];
-        let numbers = ['学号', '姓名', '系别','年级','专业','班级','电话','父亲电话','母亲电话']
+        let numbers = ['学号', '姓名', '系名','年级','专业','班级','电话','父亲电话','母亲电话']
         
         if(req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber)){
           res.json({status: true, data: arr, invariable:numbers, modify: number});
