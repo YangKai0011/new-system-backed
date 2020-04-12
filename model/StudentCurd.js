@@ -130,7 +130,7 @@ module.exports = {
 
   //删除学生信息TODO
   deleteByStudentNumber(param) {
-    let sqlPinJie = param[0];
+    let sqlPinJie = param[0] + ',';
     for(let i = 1; i < param.length; i++){
       sqlPinJie += param[i];
       if(i != param.length-1){
