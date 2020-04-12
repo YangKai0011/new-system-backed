@@ -107,8 +107,12 @@ module.exports = {
       pool.query(sql, [param.positions, param.studentNumber], callback(resolve, reject));
     }));
   },
-  //导员修改信息
+  //导员修改信息TODO
   updateMessage(param) {
+    /* let sqlArr = [];
+    for(let i =0; i < param.length; i++){
+      for(let j)
+    } */
     const sql = 'update student set department=?,profession=?,grade=?,class=?,phoneNumber=?,fatherPhone=?,motherPhone=?,buildNumber=?,dormitoryNumber=?,instructName=?,instructPhone=?,dormitoryLeader=?,LeaderPhone=? where studentNumber=?';
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.department, param.profession, param.grade, param.class, param.phoneNumber, param.fatherPhone, param.motherphone, param.buildNumber, param.dormitoryNumber, param.instructName, param.instructPhone, param.dormitoryLeader, param.LeaderPhone, param.studentNumber],
@@ -124,11 +128,18 @@ module.exports = {
     }));
   },
 
-  //删除学生信息
+  //删除学生信息TODO
   deleteByStudentNumber(param) {
-    const sql = 'delete from student where studentNumber=?';
+    let sqlPinJie = null;
+    for(let i = 0; i < param.length; i++){
+      sqlPinJie += param[i];
+      if(i != param.length-1){
+        sqlPinJie += ',';
+      }
+    }
+    const sql = `delete from student where studentNumber in(${sqlPinJie})`;
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, param.studentNumber, callback(resolve, reject));
+      pool.query(sql, callback(resolve, reject));
     }));
   },
 

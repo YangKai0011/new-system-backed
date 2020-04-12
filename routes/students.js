@@ -38,11 +38,17 @@ router.get('/', function (req, res, next) {
   } /* else if (param.type === 'updateNull') {
     //完善信息
     StudentCurd.insertMessage(param).then(data(req, res));
-  } */ else if (param.type === 'delete') {
+  } *//*  else if (param.type === 'delete') {
     
     //删除信息
     StudentCurd.deleteByStudentNumber(param).then(data(req, res));
-  }
+  } */
+});
+
+//删除和批量删除
+router.post('/delete', function(req, res){
+  const param = req.body;
+ StudentCurd.deleteByStudentNumber(param).then(data(req, res));
 });
 
 //导员批量导入信息
@@ -77,6 +83,7 @@ router.post('/insert', multer({
 
 //导员修改信息
 router.post('/update', function (req, res) {
+  const param = req.body;
   StudentCurd.updateMessage(param).then(data(req, res));
 });
 
