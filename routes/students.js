@@ -120,7 +120,15 @@ router.post('/instructInsert', function (req, res) {
 //TODO
 function data(req, res) {
   return function (data) {
-    let arrKey = Object.keys(data.results[0]);
+    let arrKey = null;
+    if(data.results.length === 0){
+      arrKey = 'undefined';
+    }else{
+      arrKey = Object.keys(data.results[0]);
+      console.log(arrKey);
+    }
+    
+    
     if (!data.err) {
       const results = data.results;
       if (req.query.type === 'search') {
