@@ -84,7 +84,30 @@ router.post('/insert', multer({
 //导员修改信息
 router.post('/update', function (req, res) {
   const param = req.body;
-  StudentCurd.updateMessage(param).then(data(req, res));
+  const positions = req.body.studentNumber;
+  for(let i = 0; i < param.length; i++){
+    let sqlPinJie = null;
+    let arrParam = [];
+    let arrKey = Object.keys(param[i]);
+    let index = arrKey.filter(item => item !== 'studentNumber');
+    sqlPinJie = index[0] + '=?';
+    arrParam[0] = Object.values(param[i])[0];
+    for(let j = 1; j < index.length; j++){
+      if(index.length === 1){
+          break;
+      }else{
+        sqlPinJie += ',';
+        sqlPinJie += index[j] + '=?';
+        arrParam[j] = Object.values(param[i])[j];
+      }
+    }
+    arrParam.push(positions);
+    StudentCurd.updateMessage(sqlPinJie, arrParam, function(err){
+      if(err){
+        res.send(err);
+      }
+    });
+  }
 });
 
 //导员新增学生信息单条插入 无插入值时如遇楼号和宿舍号必须返回NULL其余随意
@@ -97,54 +120,29 @@ router.post('/instructInsert', function (req, res) {
 //TODO
 function data(req, res) {
   return function (data) {
-   /*  var map = {};
+    var map = {};
     console.log(Object.keys(data.results[0])[0]);
     console.log(Object.values(data.results).length);
-    console.log('111111111111');
-    const keyArr = Object.keys(data.results[0]);
-    //const length = Object.keys(data.results[0]).length;
-   const valueArr = Object.values(data.results[0]);
-   
-   
     for(let i = 0; i < Object.keys(data.results[0]).length; i++){
           map[Object.keys(data.results[0])[i]] = null;
     }
-    console.log(map); */
-    
-    
-    
-    
-    
-    
+    console.log(map);
+
     let arr = [];
     if (!data.err) {
       const results = data.results;
       if (req.query.type === 'search') {
         for (let i = 0; i < results.length; i++) {
-          if (req.query.role === 'Controller') {
-            if (req.query.grade || req.query.profession) {
-              var map = { buildNumber: null, dormitoryNumber: null };
-            } else {
-              var map = { name: null, department: null, profession: null, grade: null, phoneNumber: null,instructName: null, instructPhone: null, dormitoryLeader: null, LeaderPhone: null };
-            }
-          } else if (req.query.role === 'Instructor') {
-            if (req.query.grade || req.query.profession || req.query.department) {
-              var map = { buildNumber: null, dormitoryNumber: null };
-            } else {
-              var map = { studentNumber: null, name: null, department: null, profession: null, grade: null, class: null, phoneNumber: null,buildNumber: null ,dormitoryNumber: null,instructName: null, instructPhone: null, dormitoryLeader: null, LeaderPhone: null, fatherPhone: null, motherPhone: null };
-            }
-          } else if (req.query.role === 'House') { var map = { studentNumber: null, name: null, department: null, profession: null, grade: null, class: null, phoneNumber: null, instructName: null, instructPhone: null, dormitoryNumber: null, dormitoryLeader: null, LeaderPhone: null, fatherPhone: null, motherPhone: null }; }
-
           for (let j = 0; j < Object.values(results[i]).length; j++) {
             map[Object.keys(map)[j]] = Object.values(results[i])[j];
           }
           arr[i] = map;
         }
-        let number = ['grade','profession','class','phoneNumber','fatherPhone','motherPhone','buildNumber','dormitoryNumber','instructName','instructPhone','dormitoryLeader','LeaderPhone'];
-        let numbers = ['studentNumber', 'name', 'department','grade','profession','class','phoneNumber','fatherPhone','motherPhone']
+        let modify = ['grade','profession','class','phoneNumber','fatherPhone','motherPhone','buildNumber','dormitoryNumber','instructName','instructPhone','dormitoryLeader','LeaderPhone'];
+        let invariable = ['studentNumber', 'name', 'department','profession','grade','class','phoneNumber','fatherPhone','motherPhone']
         
         if(req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber)){
-          res.json({status: true, data: arr, invariable:numbers, modify: number});
+          res.json({status: true, data: arr, invariable:invariable, modify: modify});
         }else{
           res.json({status: true, data: arr});
         }
