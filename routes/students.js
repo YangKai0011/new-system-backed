@@ -84,14 +84,20 @@ router.post('/insert', multer({
 //导员修改信息
 router.post('/update', function (req, res) {
   const param = req.body;
-  const positions = req.body.studentNumber;
+  
+  
+  /* [{studentNumber: "00000000", profession: "软件1"},{studentNumber:"00000002", class:"软工"}]; */
+  console.log(param);
+  
   for(let i = 0; i < param.length; i++){
     let sqlPinJie = null;
     let arrParam = [];
     let arrKey = Object.keys(param[i]);
+    console.log(arrKey);
+    
     let index = arrKey.filter(item => item !== 'studentNumber');
     sqlPinJie = index[0] + '=?';
-    arrParam[0] = Object.values(param[i])[0];
+    arrParam[0] = Object.values(param[i])[1];
     for(let j = 1; j < index.length; j++){
       if(index.length === 1){
           break;
@@ -101,7 +107,12 @@ router.post('/update', function (req, res) {
         arrParam[j] = Object.values(param[i])[j];
       }
     }
-    arrParam.push(positions);
+    arrParam.push(Object.values(param[i])[0]);
+    console.log(sqlPinJie);
+    console.log('11111111111');
+    console.log(arrParam);
+    
+    
     StudentCurd.updateMessage(sqlPinJie, arrParam, function(err){
       if(err){
         res.send(err);
