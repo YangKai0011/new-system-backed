@@ -116,12 +116,6 @@ module.exports = {
         }
       });
     });
-    return (promise = new Promise(function (resolve, reject) {
-      const sql = `update student set ${sqlPinjie} where studentNumber=?`;
-      pool.query(sql, param.studentNumber,
-        callback(resolve, reject));
-    }));
-
   },
   //完善信息
   insertMessage(param) {
