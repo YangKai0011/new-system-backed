@@ -46,9 +46,9 @@ router.get('/', function (req, res, next) {
 });
 
 //删除和批量删除
-router.post('/delete', function(req, res){
+router.post('/delete', function (req, res) {
   const param = req.body;
- StudentCurd.deleteByStudentNumber(param).then(data(req, res));
+  StudentCurd.deleteByStudentNumber(param).then(data(req, res));
 });
 
 //导员批量导入信息
@@ -83,25 +83,23 @@ router.post('/insert', multer({
 
 //导员修改信息
 router.post('/update', function (req, res) {
-  const param = req.body;
-  
-  
+  const param =  [{studentNumber: "00000000", profession: "软件3"},{studentNumber:"00000002", class:"软工6"}];
   /* [{studentNumber: "00000000", profession: "软件1"},{studentNumber:"00000002", class:"软工"}]; */
   console.log(param);
-  
-  for(let i = 0; i < param.length; i++){
+
+  for (let i = 0; i < param.length; i++) {
     let sqlPinJie = null;
     let arrParam = [];
     let arrKey = Object.keys(param[i]);
     console.log(arrKey);
-    
+
     let index = arrKey.filter(item => item !== 'studentNumber');
     sqlPinJie = index[0] + '=?';
     arrParam[0] = Object.values(param[i])[1];
-    for(let j = 1; j < index.length; j++){
-      if(index.length === 1){
-          break;
-      }else{
+    for (let j = 1; j < index.length; j++) {
+      if (index.length === 1) {
+        break;
+      } else {
         sqlPinJie += ',';
         sqlPinJie += index[j] + '=?';
         arrParam[j] = Object.values(param[i])[j];
@@ -111,13 +109,7 @@ router.post('/update', function (req, res) {
     console.log(sqlPinJie);
     console.log('11111111111');
     console.log(arrParam);
-    
-    
-    StudentCurd.updateMessage(sqlPinJie, arrParam, function(err){
-      if(err){
-        res.send(err);
-      }
-    });
+    StudentCurd.updateMessage(sqlPinJie, arrParam).then(data(req, res));
   }
 });
 
@@ -131,24 +123,27 @@ router.post('/instructInsert', function (req, res) {
 //TODO
 function data(req, res) {
   return function (data) {
-    let arrKey = null;
-    if(data.results.length === 0){
+console.log(data.results);
+
+
+    /* let arrKey = null;
+    if (data.results.length === 0) {
       arrKey = 'undefined';
-    }else{
+    } else {
       arrKey = Object.keys(data.results[0]);
       console.log(arrKey);
-    }
-    
-    
+    } */
+
+
     if (!data.err) {
       const results = data.results;
       if (req.query.type === 'search') {
-        let modify = ['grade','profession','class','phoneNumber','fatherPhone','motherPhone','buildNumber','dormitoryNumber','instructName','instructPhone','dormitoryLeader','LeaderPhone'];
-        let invariable = ['studentNumber', 'NAME', 'department','profession','grade','class','phoneNumber','fatherPhone','motherPhone']
-        const status = req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({status: true, data: results, invariable:invariable, modify: modify}) : res.json({status: true, data: results, invariable: arrKey, modify: undefined});
+        let modify = ['grade', 'profession', 'class', 'phoneNumber', 'fatherPhone', 'motherPhone', 'buildNumber', 'dormitoryNumber', 'instructName', 'instructPhone', 'dormitoryLeader', 'LeaderPhone'];
+        let invariable = ['studentNumber', 'NAME', 'department', 'profession', 'grade', 'class', 'phoneNumber', 'fatherPhone', 'motherPhone']
+        const status = req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({ status: true, data: results, invariable: invariable, modify: modify }) : res.json({ status: true, data: results, invariable: arrKey, modify: undefined });
         status;
       } else {
-        results.affectedRows === 0 ? res.json({status: false}) : res.json({status: true});
+        results.affectedRows === 0 ? res.json({ status: false }) : res.json({ status: true });
       }
     } else {
       res.send(data.err);

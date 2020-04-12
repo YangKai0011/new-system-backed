@@ -89,33 +89,14 @@ module.exports = {
     }));
   },
   //导员修改信息TODO
-  updateMessage(sqlPinJie, arrParam, callback) {
+  updateMessage(sqlPinJie, arrParam) {
+    console.log('222222222222');
+    
     const sql = `update student set ${sqlPinJie}  where studentNumber=?`;
-    pool.getConnection(function (err, conn) {
-      if (err) throw err;
-      conn.beginTransaction(function (err) {
-        try {
-          if (err) throw err;
-          conn.query(sql, arrParam, function (err, results) {
-            if (err) {
-              console.log(err);
-              console.log(err.sql);
-              //回滚事务
-              conn.rollback(function () {
-                return callback(err.sql);
-              });
-            } else {
-              console.log('提交事务');
-              conn.commit(function () {
-                console.log('success');
-              })
-            }
-          });
-        } finally {
-          conn.release();
-        }
-      });
-    });
+    return (promise = new Promise(function (resolve, reject) {
+      pool.query(sql, arrParam, callback(resolve, reject));
+    }));
+    
   },
   //完善信息
   insertMessage(param) {
