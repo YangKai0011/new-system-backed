@@ -131,7 +131,7 @@ function data(req, res) {
           }
           arr[i] = map;
         }
-        let number = ['buildNumber','dormitoryNumber','instructName','instructPhone','dormitoryLeader','LeaderPhone'];
+        let number = ['楼号','宿舍号','导员','导员电话','宿舍长','宿舍长电话'];
         
         if(req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber)){
           res.json({status: true, data: arr, modify: number});
