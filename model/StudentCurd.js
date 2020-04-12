@@ -50,8 +50,11 @@ module.exports = {
       //删除无关的键值对
       delete param.type; delete param.role; delete param.positions
       let arr = Object.keys(param);
+      console.log(arr);
+      console.log('1111111111111');
+
       const index = arr.filter(item => param[item] !== 'undefined');
-      //console.log(index);
+      console.log(index);
       switch (index.length) {
         case 1:
           sqlPinJie = index + '=?';
@@ -82,7 +85,6 @@ module.exports = {
         sqlPinJie = temp + '=?';
         sqlArr = [positions, param[temp]];
       } */
-     
 
       const sql = `SELECT  ${filed} FROM  student WHERE buildNumber=? and (${sqlPinJie})`;
       return (promise = new Promise(function (resolve, reject) {
@@ -108,27 +110,37 @@ module.exports = {
     }));
   },
   //导员修改信息TODO
-  updateMessage(param) {
-    let sqlPinjies = [];
-    let sqlPinjie;
-    let sqlArr = [];
-    for(let i = 0; i < param.length; i++){
-      let arr = Object.keys(param[i]);
-      for(let j = 0; j < arr.length; j++){
-          sqlPinjie += arr[j];
-          sqlArr = Object.values(param[i])[j];
-          if(j !== arr.length -1){
-            sqlPinjie += ',';
-          }
-      }
-      sqlPinjies[i] = sqlPinjie;
-    }
+  updateMessage(sqlPinJie, arrParam, callback) {
+    const sql = `update student set ${sqlPinJie}  where studentNumber=?`;
+    pool.getConnection(function (err, conn) {
+      if (err) throw err;
+      conn.beginTransaction(function (err) {
+        try {
+          if (err) throw err;
+          conn.query(sql, arrParam, function (err, results) {
+            if (err) {
+              console.log(err);
+              console.log(err.sql);
+              //回滚事务
+              conn.rollback(function () {
+                return callback(err.sql);
+              });
+            } else {
+              console.log('提交事务');
+              conn.commit(function () {
+                console.log('success');
+              })
+            }
+          });
+        } finally {
+          conn.release();
+        }
+      });
+    });
     return (promise = new Promise(function (resolve, reject) {
-      for(let i =0; i < sqlPinjies.length; i++){
-        const sql = `update student set ${sqlPinje} where studentNumber=?`;
-        pool.query(sql, sqlArr,
-          callback(resolve, reject));
-      }
+      const sql = `update student set ${sqlPinjie} where studentNumber=?`;
+      pool.query(sql, param.studentNumber,
+        callback(resolve, reject));
     }));
 
   },
@@ -140,17 +152,17 @@ module.exports = {
     }));
   },
 
-  //删除学生信息
+  //删除学生信息TODO
   deleteByStudentNumber(param) {
     let sqlPinJie = param[0];
-    
-      for(let i = 1; i < param.length; i++){
-          sqlPinJie += ',';
-          sqlPinJie += param[i];
-
+    for (let i = 1; i < param.length; i++) {
+      if (param.length === 1) {
+        break;
+      } else {
+        sqlPinJie += ',';
+        sqlPinJie += param[i];
       }
-
-    
+    }
     const sql = `delete from student where studentNumber in(${sqlPinJie})`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, callback(resolve, reject));
