@@ -39,6 +39,7 @@ router.get('/', function (req, res, next) {
     //完善信息
     StudentCurd.insertMessage(param).then(data(req, res));
   } */ else if (param.type === 'delete') {
+    
     //删除信息
     StudentCurd.deleteByStudentNumber(param).then(data(req, res));
   }
@@ -86,6 +87,7 @@ router.post('/instructInsert', function (req, res) {
   StudentCurd.insertByOne(param).then(data(req, res));
 });
 
+//TODO
 function data(req, res) {
   return function (data) {
    /*  var map = {};
@@ -131,10 +133,11 @@ function data(req, res) {
           }
           arr[i] = map;
         }
-        let number = ['年级','专业','班级','联系电话','父亲电话','母亲电话','楼号','宿舍号','导员','导员电话','宿舍长','宿舍长电话'];
+        let number = ['年级','专业','班级','电话','父亲电话','母亲电话','楼号','宿舍号','导员姓名','导员电话','宿舍长','宿舍长电话'];
+        let numbers = ['学号', '姓名', '系别','年级','专业','班级','电话','父亲电话','母亲电话']
         
         if(req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber)){
-          res.json({status: true, data: arr, modify: number});
+          res.json({status: true, data: arr, invariable:numbers, modify: number});
         }else{
           res.json({status: true, data: arr});
         }
