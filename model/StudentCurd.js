@@ -183,7 +183,7 @@ module.exports = {
       arr[i] = Object.values(param)[i];
     }
     console.log(arr);
-    const sql = 'INSERT INTO student(studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);';
+    const sql = 'INSERT INTO student(studentNumber,instructName,instructPhone,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone,photo) VALUES(?,?,?,?,?,?,?,?,?);';
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, arr, callback(resolve, reject));
     }));
