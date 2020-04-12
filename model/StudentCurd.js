@@ -142,13 +142,15 @@ module.exports = {
 
   //删除学生信息
   deleteByStudentNumber(param) {
-    let sqlPinJie = param[0] + ',';
-    for(let i = 1; i < param.length; i++){
-      sqlPinJie += param[i];
-      if(i != param.length-1){
-        sqlPinJie += ',';
+    let sqlPinJie = param[0];
+    
+      for(let i = 1; i < param.length; i++){
+          sqlPinJie += ',';
+          sqlPinJie += param[i];
+
       }
-    }
+
+    
     const sql = `delete from student where studentNumber in(${sqlPinJie})`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, callback(resolve, reject));
