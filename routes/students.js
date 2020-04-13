@@ -137,9 +137,13 @@ router.post('/instructInsert', multer({
     return;
   } else {
     let file = req.file;
+    console.log('1111111111111111111');
+    
     fs.renameSync('./public/img/' + file.filename, './public/img/' + file.originalname);
     const param = req.body;
     console.log(param);
+    console.log('222222222222222222222');
+    
     param.photo = file.path;
     StudentCurd.insertMessage(param).then(data(req, res));
   }

@@ -100,6 +100,8 @@ module.exports = {
 
   //完善信息
   insertMessage(param) {
+    console.log('333333333333333333333');
+    
     const sql = 'UPDATE student SET buildNumber=?,dormitoryNumber=?,instructName=?,instructPhone=?, dormitoryLeader=?, LeaderPhone=?, fatherPhone=?, motherPhone=?,photo=? WHERE studentNumber=?';
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.buildNumber, param.dormitoryNumber, param.instructName, param.instructPhone, param.dormitoryLeader, param.LeaderPhone, param.fatherPhone, param.motherPhone, param.photo, param.studentNumber], callback(resolve, reject));
