@@ -4,7 +4,7 @@ const StudentCurd = require('../model/StudentCurd');
 const multer = require('multer');
 const fs = require('fs');
 const excel = require('../lib/excel-utils');
-
+const img = require('../model/img');
 
 router.get('/', function (req, res, next) {
   const param = req.query;
@@ -67,13 +67,12 @@ router.post('/insert', multer({
           for (let j in Object.values(data[i])) {
             arr[j] = Object.values(data[i])[j];
           }
-          StudentCurd.insertByInstruct(arr, function (err) {
+          StudentCurd.insertByInstruct(arr, function (err,results) {
             if (err) {
-              res.send(err);
+              res.json(err);
             }
           });
         }
-        res.send('文件上传成功并且导入成功');
       } else {
         res.json(data.err);
       }
@@ -81,18 +80,14 @@ router.post('/insert', multer({
   }
 });
 
-//导员修改信息
+//导员修改信息TODO
 router.post('/update', function (req, res) {
-  const param =  [{studentNumber: "00000000", profession: "软件3"},{studentNumber:"00000002", class:"软工6"}];
+  const param = [{ studentNumber: "00000000", buildNumber: "软件6s1" }, { studentNumber: "00000002", class: "软工ss0" }];
   /* [{studentNumber: "00000000", profession: "软件1"},{studentNumber:"00000002", class:"软工"}]; */
-  console.log(param);
-
   for (let i = 0; i < param.length; i++) {
     let sqlPinJie = null;
     let arrParam = [];
     let arrKey = Object.keys(param[i]);
-    console.log(arrKey);
-
     let index = arrKey.filter(item => item !== 'studentNumber');
     sqlPinJie = index[0] + '=?';
     arrParam[0] = Object.values(param[i])[1];
@@ -106,18 +101,37 @@ router.post('/update', function (req, res) {
       }
     }
     arrParam.push(Object.values(param[i])[0]);
-    console.log(sqlPinJie);
-    console.log('11111111111');
-    console.log(arrParam);
     StudentCurd.updateMessage(sqlPinJie, arrParam).then(data(req, res));
   }
 });
 
 //导员新增学生信息单条插入 无插入值时如遇楼号和宿舍号必须返回NULL其余随意
-router.post('/instructInsert', function (req, res) {
+/* router.post('/instructInsert', function (req, res) {
   const param = req.body;
   //插入单个信息
   StudentCurd.insertByOne(param).then(data(req, res));
+}); */
+
+
+//插入！！！！！！！！！！！
+/* router.post('/instructInsert', function(req, res){
+  const param = req.body;
+  console.log(param);
+  StudentCurd.insertMessage(param).then(data(req, res));
+}); */
+router.post('/instructInsert',multer({
+  dest: 'public/img'
+}).single('file'),function(req, res, next){
+  if(req.file.length === 0){
+    res.render("error",{messagr: "上传图片为空"});
+    return;
+  }else{
+    let file = req.file;
+    fs.renameSync('./public/img/' + file.filename, './public/img/' + file.originalname);
+    const param = req.body;
+    console.log(param);
+    StudentCurd.insertMessage(param).then(data(req, res));
+  }
 });
 
 //TODO
@@ -125,19 +139,15 @@ function data(req, res) {
   return function (data) {
 console.log(data.results);
 
-
-    /* let arrKey = null;
-    if (data.results.length === 0) {
-      arrKey = 'undefined';
-    } else {
-      arrKey = Object.keys(data.results[0]);
-      console.log(arrKey);
-    } */
-
-
     if (!data.err) {
       const results = data.results;
       if (req.query.type === 'search') {
+        let arrKey = null;
+        if (data.results.length === 0) {
+          arrKey = 'undefined';
+        } else {
+          arrKey = Object.keys(data.results[0]);
+        }
         let modify = ['grade', 'profession', 'class', 'phoneNumber', 'fatherPhone', 'motherPhone', 'buildNumber', 'dormitoryNumber', 'instructName', 'instructPhone', 'dormitoryLeader', 'LeaderPhone'];
         let invariable = ['studentNumber', 'NAME', 'department', 'profession', 'grade', 'class', 'phoneNumber', 'fatherPhone', 'motherPhone']
         const status = req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({ status: true, data: results, invariable: invariable, modify: modify }) : res.json({ status: true, data: results, invariable: arrKey, modify: undefined });

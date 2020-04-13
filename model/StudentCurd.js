@@ -91,18 +91,18 @@ module.exports = {
   //导员修改信息TODO
   updateMessage(sqlPinJie, arrParam) {
     console.log('222222222222');
-    
     const sql = `update student set ${sqlPinJie}  where studentNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, arrParam, callback(resolve, reject));
     }));
     
   },
+
   //完善信息
   insertMessage(param) {
-    const sql = 'UPDATE student SET buildnumber=?,dormitorynumber=?,phoneNumber=?,instructName=?,instructPhone=?, dormitoryLeader=?, LeaderPhone=?, fatherphone=?, motherphone=? WHERE studentNumber=?';
+    const sql = 'UPDATE student SET buildNumber=?,dormitoryNumber=?,instructName=?,instructPhone=?, dormitoryLeader=?, LeaderPhone=?, fatherPhone=?, motherPhone=?,photo=? WHERE studentNumber=?';
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.buildnumber, param.dormitorynumber, param.phoneNumber, param.instructName, param.instructPhone, param.dormitoryLeader, param.LeaderPhone, param.fatherphone, param.motherphone, param.studentNumber], callback(resolve, reject));
+      pool.query(sql, [param.buildNumber, param.dormitoryNumber, param.instructName, param.instructPhone, param.dormitoryLeader, param.LeaderPhone, param.fatherPhone, param.motherPhone, param.photo, param.studentNumber], callback(resolve, reject));
     }));
   },
 
@@ -126,7 +126,7 @@ module.exports = {
   //导员导入信息
   insertByInstruct(param, callback) {
     console.log(param);
-    const sql = 'insert into student(studentNUmber, name, department, profession, grade, class) values(?,?,?,?,?,?)';
+    const sql = 'insert into student(studentNumber, name, department, profession, grade, class) values(?,?,?,?,?,?)';
     pool.getConnection(function (err, conn) {
       if (err) throw err;
       conn.beginTransaction(function (err) {
@@ -138,35 +138,40 @@ module.exports = {
               console.log(err.sql);
               //回滚事务
               conn.rollback(function () {
-                return callback(err.sql);
+                return callback(err.sql,null);
               });
             } else {
               console.log('提交事务');
               conn.commit(function () {
                 console.log('success');
               });
+              conn.rollback(function(){
+                return callback(null,results);
+              })
             }
           });
         } finally {
           conn.release();
-
         }
       });
     });
-
-
   },
-  //导员单个插入信息
+/*   //导员单个插入信息
   insertByOne(param) {
-    console.log(param);
+    console.log(Object.keys(param)[0]);
     let arr = [];
     for (let i = 0; i < Object.keys(param).length; i++) {
-      arr[i] = Object.values(param)[i];
+      if(Object.keys(param)[i] === 'dormitoryNumber'){
+        arr.push(parseInt(Object.values(param)[i]));
+      }else{
+        arr.push(Object.values(param)[i]); 
+      }
     }
+    console.log('111111111111');
     console.log(arr);
     const sql = 'INSERT INTO student(studentNumber,instructName,instructPhone,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone,photo) VALUES(?,?,?,?,?,?,?,?,?);';
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, arr, callback(resolve, reject));
     }));
-  }
+  } */
 };
