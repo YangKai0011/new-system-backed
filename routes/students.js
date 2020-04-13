@@ -67,7 +67,7 @@ router.post('/insert', multer({
           for (let j in Object.values(data[i])) {
             arr[j] = Object.values(data[i])[j];
           }
-          StudentCurd.insertByInstruct(arr, function (err,results) {
+          StudentCurd.insertByInstruct(arr, function (err, results) {
             if (err) {
               res.json(err);
             }
@@ -82,9 +82,9 @@ router.post('/insert', multer({
 
 //导员修改信息TODO
 router.post('/update', function (req, res) {
-  const param = req.body;
+  const param = [{ studentNumber: "00000000", buildNumber: "91", dormitoryNumber: '3',profession:'ads' }, { studentNumber: "00000001", profession: "afds" }];
   console.log(param);
-  
+
   /* [{studentNumber: "00000000", profession: "软件1"},{studentNumber:"00000002", class:"软工"}]; */
   for (let i = 0; i < param.length; i++) {
     let sqlPinJie = null;
@@ -92,17 +92,25 @@ router.post('/update', function (req, res) {
     let arrKey = Object.keys(param[i]);
     let index = arrKey.filter(item => item !== 'studentNumber');
     sqlPinJie = index[0] + '=?';
+    console.log(sqlPinJie);
+    
     arrParam[0] = Object.values(param[i])[1];
+    console.log(arrParam);
+    
     for (let j = 1; j < index.length; j++) {
       if (index.length === 1) {
         break;
       } else {
         sqlPinJie += ',';
         sqlPinJie += index[j] + '=?';
-        arrParam[j] = Object.values(param[i])[j];
+        arrParam[j] = Object.values(param[i])[j+1];
       }
     }
+    console.log(sqlPinJie);
+    
     arrParam.push(Object.values(param[i])[0]);
+    console.log(arrParam);
+    
     StudentCurd.updateMessage(sqlPinJie, arrParam).then(data(req, res));
   }
 });
@@ -121,17 +129,18 @@ router.post('/update', function (req, res) {
   console.log(param);
   StudentCurd.insertMessage(param).then(data(req, res));
 }); */
-router.post('/instructInsert',multer({
+router.post('/instructInsert', multer({
   dest: 'public/img'
-}).single('file'),function(req, res, next){
-  if(req.file.length === 0){
-    res.render("error",{messagr: "上传图片为空"});
+}).single('photo'), function (req, res, next) {
+  if (req.file.length === 0) {
+    res.render("error", { messagr: "上传图片为空" });
     return;
-  }else{
+  } else {
     let file = req.file;
     fs.renameSync('./public/img/' + file.filename, './public/img/' + file.originalname);
     const param = req.body;
     console.log(param);
+    param.photo = file.path;
     StudentCurd.insertMessage(param).then(data(req, res));
   }
 });
@@ -139,8 +148,7 @@ router.post('/instructInsert',multer({
 //TODO
 function data(req, res) {
   return function (data) {
-console.log(data.results);
-
+    console.log(data.results);
     if (!data.err) {
       const results = data.results;
       if (req.query.type === 'search') {
@@ -155,10 +163,24 @@ console.log(data.results);
         const status = req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({ status: true, data: results, invariable: invariable, modify: modify }) : res.json({ status: true, data: results, invariable: arrKey, modify: undefined });
         status;
       } else {
-        results.affectedRows === 0 ? res.json({ status: false }) : res.json({ status: true });
+        results.changedRows === 0 ? res.end('false') : res.end('true');
+       // results.changedRows === 0 ? res.json({ status: false }): res.json({ status: true });
       }
     } else {
-      res.send(data.err);
+      let str = data.err.sqlMessage;
+      let start = str.indexOf('colum') + 6;
+      switch (data.err.sqlState) {
+        case '22001':
+          res.end(str.slice(start, -8));
+          break;
+        case 'HY000':
+          res.end(str.slice(start, -8));
+          break;
+        default:
+          res.json(data.err);
+          break;
+      }
+
     }
   };
 }
