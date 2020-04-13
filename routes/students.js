@@ -82,7 +82,9 @@ router.post('/insert', multer({
 
 //导员修改信息TODO
 router.post('/update', function (req, res) {
-  const param = [{ studentNumber: "00000000", buildNumber: "软件6s1" }, { studentNumber: "00000002", class: "软工ss0" }];
+  const param = req.body;
+  console.log(param);
+  
   /* [{studentNumber: "00000000", profession: "软件1"},{studentNumber:"00000002", class:"软工"}]; */
   for (let i = 0; i < param.length; i++) {
     let sqlPinJie = null;
