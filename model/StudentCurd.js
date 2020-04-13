@@ -98,13 +98,12 @@ module.exports = {
     
   },
 
-  //完善信息
+  //完善信息TODO
   insertMessage(param) {
-    console.log('333333333333333333333');
-    
-    const sql = 'UPDATE student SET buildNumber=?,dormitoryNumber=?,instructName=?,instructPhone=?, dormitoryLeader=?, LeaderPhone=?, fatherPhone=?, motherPhone=?,photo=? WHERE studentNumber=?';
+    console.log('3333333333333333333333333333');   
+    const sql = 'insert into student(studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone,photo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
     return (promise = new Promise(function (resolve, reject) {
-      pool.query(sql, [param.buildNumber, param.dormitoryNumber, param.instructName, param.instructPhone, param.dormitoryLeader, param.LeaderPhone, param.fatherPhone, param.motherPhone, param.photo, param.studentNumber], callback(resolve, reject));
+      pool.query(sql, [param.studentNumber,param.NAME,param.department,param.profession,param.grade,param.class,param.phoneNumber,  param.instructName, param.instructPhone,param.buildNumber, param.dormitoryNumber, param.dormitoryLeader, param.LeaderPhone, param.fatherPhone, param.motherPhone, param.photo], callback(resolve, reject));
     }));
   },
 

@@ -13,52 +13,74 @@
   </head>
 
   <body>
-    这是一个静态页面，负责展示
+    修改信息
     <form action="/students/instructInsert" method="POST">
     <table align="center">
+        <tr>
+            <td>学号</td>
+            <td><input type="text" name="studentNumber"></td>
+          </tr>
+          <tr>
+            <td>姓名</td>
+            <td><input type="text" name="NAME"></td>
+          </tr> 
       <tr>
-          <td>学号</td>
-          <td><input type="text" name="studentNumber"></td>
+        <td>系别</td>
+        <td><input type="text" name="department"></td>
       </tr>
-        
-<tr>
-  <td>导员姓名</td>
-  <td><input type="text" name="instructName"></td>
-</tr>
-<tr>
-    <td>导员电话</td>
-    <td><input type="text" name="instructPhone"></td>
-</tr>
-<tr>
-  <td>楼号</td>
-  <td><input type="text" name="buildNumber"></td>
-</tr>
-<tr>
-    <td>宿舍号</td>
-    <td><input type="text" name="dormitoryNumber"></td>
-</tr>
-<tr>
-  <td>宿舍长</td>
-  <td><input type="text" name="dormitoryLeader"></td>
-</tr>
-<tr>
-    <td>宿舍长电话</td>
-    <td><input type="text" name="LeaderPhone"></td>
-</tr>
-<tr>
-  <td>父亲电话</td>
-  <td><input type="text" name="fatherPhone"></td>
-</tr>
-<tr>
-    <td>母亲电话</td>
-    <td><input type="text" name="motherPhone"></td>
-  </tr>
-  <!-- <tr>
-    <td>照片</td>
-    <td><input type="text" name="photo"></td>
-  </tr> -->
-  <input type="file" name="avatar">
-  <input type="submit" value="提交">
+    <tr>
+      <td>专业</td>
+      <td><input type="text" name="profession"></td>
+    </tr>
+    <tr>
+    <td>年级</td>
+    <td><input type="text" name="grade"></td>
+    </tr>
+    <tr>
+        <td>班级</td>
+        <td><input type="text" name="class"></td>
+        </tr>
+        <tr>
+            <td>联系电话</td>
+            <td><input type="text" name="phoneNumber"></td>
+            </tr>
+            <tr>
+              <td>导员姓名</td>
+              <td><input type="text" name="instructName"></td>
+              </tr> 
+              <tr>
+                <td>导员电话</td>
+                <td><input type="text" name="instructPhone"></td>
+                </tr>
+            <tr>
+                <td>父亲电话</td>
+                <td><input type="text" name="fatherPhone"></td>
+                </tr>
+                <tr>
+                    <td>母亲电话</td>
+                    <td><input type="text" name="motherPhone"></td>
+                    </tr>
+                    <tr>
+                        <td>楼号</td>
+                        <td><input type="text" name="buildNumber"></td>
+                        </tr>
+                        <tr>
+                            <td>宿舍号</td>photo
+                            <td><input type="text" name="dormitoryNumber"></td>
+                            </tr>
+                  
+                                    <tr>
+                                        <td>宿舍长</td>
+                                        <td><input type="text" name="dormitoryLeader"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>宿舍长电话</td>
+                                            <td><input type="text" name="LeaderPhone"></td>
+                                            </tr>
+                                            <tr>
+                                              <td>照片</td>
+                                              <td><input type="text" name="photo"></td>
+                                              </tr>
       <tr>
           <td align="center"><input type="submit" value="提交"></td>
       </tr>
