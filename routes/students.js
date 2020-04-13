@@ -132,7 +132,7 @@ router.post('/update', function (req, res) {
 router.post('/instructInsert', multer({
   dest: 'public/img'
 }).single('file'), function (req, res, next) {
-  if (req.photo.length === 0) {
+  if (req.file.length === 0) {
     res.render("error", { message: "上传图片为空" });
     return;
   } else {
