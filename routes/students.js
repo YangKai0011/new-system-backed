@@ -80,7 +80,7 @@ router.post('/insert', multer({
   }
 });
 
-//导员修改信息TODO
+//导员修改信息
 router.post('/update', function (req, res) {
   const param = req.body;
   /* [{ studentNumber: "00000000", buildNumber: "91", dormitoryNumber: '', profession: 'ads' }, { studentNumber: "00000001", profession: "afds" }]; */
@@ -93,11 +93,7 @@ router.post('/update', function (req, res) {
     let arrKey = Object.keys(param[i]);
     let index = arrKey.filter(item => item !== 'studentNumber');
     sqlPinJie = index[0] + '=?';
-    console.log(sqlPinJie);
-
     arrParam[0] = Object.values(param[i])[1];
-    console.log(arrParam);
-
     for (let j = 1; j < index.length; j++) {
       if (index.length === 1) {
         break;
@@ -107,29 +103,14 @@ router.post('/update', function (req, res) {
         arrParam[j] = Object.values(param[i])[j + 1];
       }
     }
-    console.log(sqlPinJie);
-
     arrParam.push(Object.values(param[i])[0]);
-    console.log(arrParam);
-
     StudentCurd.updateMessage(sqlPinJie, arrParam).then(data(req, res));
   }
 });
+router.get('/instructMessage', (req, res, next) =>{
+  res.send({status:'/instructInsert', notAllowSpace: ['name','department','profession','grade','class'],allowSpace:['phoneNumber','instructName','instructPhone','buildNumber','dormitoryNumber','dormitoryLeader','LeaderPhone','fatherPhone','motherPhone']});
+});
 
-//导员新增学生信息单条插入 无插入值时如遇楼号和宿舍号必须返回NULL其余随意
-/* router.post('/instructInsert', function (req, res) {
-  const param = req.body;
-  //插入单个信息
-  StudentCurd.insertByOne(param).then(data(req, res));
-}); */
-
-
-//插入！！！！！！！！！！！
-/* router.post('/instructInsert', function(req, res){
-  const param = req.body;
-  console.log(param);
-  StudentCurd.insertMessage(param).then(data(req, res));
-}); */
 router.post('/instructInsert', multer({
   dest: 'public/img'
 }).single('photo'), function (req, res, next) {
@@ -137,21 +118,14 @@ router.post('/instructInsert', multer({
     res.render("error", { message: "上传图片为空" });
     return;
   } else {
-    
     let file = req.file;
-    console.log(file);
     //获取文件扩展名
     let exts = file.originalname.split(".");
     let ext = exts[exts.length - 1]; //防止其余的点
-    console.log(ext);
-    
-    fs.renameSync('systm-backend\\public\\img\\' + file.originalname, 'systm-backend\\public\\img\\' + (Date.now() + parseInt(Math.random() * 9999))+ext);
-    /* let ext = exts[exts.length - 1]; //防止其余的点
-    let tmpName = Date.now() + parseInt(Math.random() * 9999); */
+    let number = Date.now();
+    fs.renameSync(file.path, 'public\\img\\' +number+'.'+ext);
     const param = req.body;
-    console.log(param);
-    console.log('222222222222222222222');
-    param.photo = 'systm-backend\\public\\img' + '\\' + file.originalname;
+    param.photo = 'systm-backend\\public\\img\\' + number + '.' + ext;
     console.log(param.photo);
     StudentCurd.insertMessage(param).then(data(req, res));
   }

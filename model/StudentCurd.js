@@ -90,7 +90,6 @@ module.exports = {
   },
   //导员修改信息TODO
   updateMessage(sqlPinJie, arrParam) {
-    console.log('222222222222');
     const sql = `update student set ${sqlPinJie}  where studentNumber=?`;
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, arrParam, callback(resolve, reject));
