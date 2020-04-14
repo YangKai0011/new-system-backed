@@ -139,7 +139,7 @@ router.post('/instructInsert', multer({
   } else {
     let file = req.file;
     console.log(file);
-    fs.renameSync('./public/img/' + file.originalname, './public/img/' + Date.now() + parseInt(Math.random() * 9999));
+    fs.renameSync('./public/img/' + file.originalname, './public/img/' + (Date.now() + parseInt(Math.random() * 9999)));
     const param = req.body;
     console.log(param);
     console.log('222222222222222222222');
