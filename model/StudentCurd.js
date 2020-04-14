@@ -100,7 +100,9 @@ module.exports = {
 
   //插入信息TODO
   insertMessage(param) {
-    console.log('3333333333333333333333333333');   
+    console.log('3333333333333333333333333333');
+    console.log(param);
+       
     const sql = 'insert into student(studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone,photo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
     return (promise = new Promise(function (resolve, reject) {
       pool.query(sql, [param.studentNumber,param.NAME,param.department,param.profession,param.grade,param.class,param.phoneNumber,  param.instructName, param.instructPhone,param.buildNumber, param.dormitoryNumber, param.dormitoryLeader, param.LeaderPhone, param.fatherPhone, param.motherPhone, param.photo], callback(resolve, reject));
