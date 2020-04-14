@@ -82,7 +82,8 @@ router.post('/insert', multer({
 
 //导员修改信息TODO
 router.post('/update', function (req, res) {
-  const param = [{ studentNumber: "00000000", buildNumber: "91", dormitoryNumber: '', profession: 'ads' }, { studentNumber: "00000001", profession: "afds" }];
+  const param = req.body;
+  /* [{ studentNumber: "00000000", buildNumber: "91", dormitoryNumber: '', profession: 'ads' }, { studentNumber: "00000001", profession: "afds" }]; */
   console.log(param);
 
   /* [{studentNumber: "00000000", profession: "软件1"},{studentNumber:"00000002", class:"软工"}]; */

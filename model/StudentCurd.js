@@ -98,7 +98,7 @@ module.exports = {
     
   },
 
-  //完善信息TODO
+  //插入信息TODO
   insertMessage(param) {
     console.log('3333333333333333333333333333');   
     const sql = 'insert into student(studentNumber,NAME,department,profession,grade,class,phoneNumber,instructName,instructPhone,buildNumber,dormitoryNumber,dormitoryLeader,LeaderPhone,fatherPhone,motherPhone,photo) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
