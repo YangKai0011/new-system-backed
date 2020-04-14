@@ -137,12 +137,15 @@ router.post('/instructInsert', multer({
     res.render("error", { message: "上传图片为空" });
     return;
   } else {
+    
     let file = req.file;
     console.log(file);
     //获取文件扩展名
     let exts = file.originalname.split(".");
     let ext = exts[exts.length - 1]; //防止其余的点
-    fs.renameSync('systm-backend\\public\\img\\' + file.filename, 'systm-backend\\public\\img\\' + (Date.now() + parseInt(Math.random() * 9999))+'ext');
+    console.log(ext);
+    
+    fs.renameSync('systm-backend\\public\\img\\' + file.originalname, 'systm-backend\\public\\img\\' + (Date.now() + parseInt(Math.random() * 9999))+ext);
     /* let ext = exts[exts.length - 1]; //防止其余的点
     let tmpName = Date.now() + parseInt(Math.random() * 9999); */
     const param = req.body;
