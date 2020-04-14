@@ -141,7 +141,7 @@ router.post('/instructInsert', multer({
     console.log(file);
     /* //获取文件扩展名
     let exts = file.originalname.split("."); */
-    fs.renameSync('systm-backend\\public\\img' + file.originalname, 'systm-backend\\public\\img' + (Date.now() + parseInt(Math.random() * 9999)));
+    fs.renameSync('systm-backend\\public\\img' + file.filename, 'systm-backend\\public\\img' + (Date.now() + parseInt(Math.random() * 9999)));
     /* let ext = exts[exts.length - 1]; //防止其余的点
     let tmpName = Date.now() + parseInt(Math.random() * 9999); */
     const param = req.body;
