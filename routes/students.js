@@ -23,6 +23,7 @@ router.get('/', function (req, res, next) {
         //按年级系别专业查询
         StudentCurd.findGradeProfessionDepartment(param).then(data(req, res));
       } else {
+        //宿舍号楼号
         StudentCurd.findDormitory(param).then(data(req, res));
       }
     } else if (param.role === 'House') {
@@ -30,6 +31,7 @@ router.get('/', function (req, res, next) {
         //通过宿舍号查询
         StudentCurd.findStubAndDormitoryNumber(param).then(data(req, res));
       } else if (param.grade || param.profession || param.department) {
+        //年级专业系别
         StudentCurd.findStub(param).then(data(req, res));
       } else if (param.name || param.studentNumber) {
         StudentCurd.findStubNameAndId(param).then(data(req, res));
@@ -147,8 +149,7 @@ function data(req, res) {
         }
         let modify = ['grade', 'profession', 'class', 'phoneNumber', 'fatherPhone', 'motherPhone', 'buildNumber', 'dormitoryNumber', 'instructName', 'instructPhone', 'dormitoryLeader', 'LeaderPhone'];
         let invariable = ['studentNumber', 'NAME', 'department', 'profession', 'grade', 'class', 'phoneNumber', 'fatherPhone', 'motherPhone']
-        const status = req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({ status: true, data: results, invariable: invariable, modify: modify }) : res.json({ status: true, data: results, invariable: arrKey, modify: undefined });
-        status;
+        req.query.role === 'Instructor' && (req.query.buildNumber || req.query.dormitoryNumber) ? res.json({ status: true, data: results, invariable: invariable, modify: modify }) : res.json({ status: true, data: results, invariable: arrKey, modify: undefined });
       } else {
         results.affectedRows === 0 ? res.end('false') : res.end('true');
       }
