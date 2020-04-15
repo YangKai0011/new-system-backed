@@ -9,6 +9,7 @@ const allowCors = require('./lib/allow-cors'); //跨域许可
 var indexRouter = require('./routes/index');
 var accentRouter = require('./routes/accent');
 const studentsRouter = require('./routes/students');
+const appraisalRouter = require('./routes/appraisal');
 
 
 var app = express();
@@ -23,6 +24,7 @@ app.use(allowCors); //跨域中间件
 app.use('/', indexRouter);
 app.use('/user', accentRouter);
 app.use('/students', studentsRouter);
+app.use('/appraisal', accentRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

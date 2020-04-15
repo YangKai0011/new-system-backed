@@ -125,6 +125,7 @@ router.post('/instructInsert', multer({
     let number = Date.now();
     fs.renameSync(file.path, 'public\\img\\' + number + '.' + ext);
     const param = req.body;
+    console.log(param);
     param.photo = 'systm-backend\\public\\img\\' + number + '.' + ext;
     console.log(param.photo);
     StudentCurd.insertMessage(param).then(data(req, res));

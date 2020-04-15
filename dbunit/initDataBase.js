@@ -29,6 +29,15 @@ let createStudent = `create table if not exists student(
 	photo varchar(100) COMMENT '图片保存路径'
 )ENGINE=INNODB DEFAULT CHARSET=utf8;`;
 
+//宿舍评比得分记录表
+let createAppraisal = `CREATE TABLE IF NOT EXISTS appraisal(
+	buildNumber INT(11) COMMENT '楼号',
+	dormitoryNumber INT(11) COMMENT '宿舍号',
+	violations INT(11) COMMENT '违规项',
+	neatItems INT(11) COMMENT '整洁项',
+	score INT(11) COMMENT '总体得分',
+	checkDate  VARCHAR(50) COMMENT '检查日期'
+)ENGINE=INNODB DEFAULT CHARSET=utf8;`;
 module.exports = function () {
   pool.query(createAccent, function (err, results, fields) {
     if (err) {
@@ -40,5 +49,9 @@ module.exports = function () {
       console.log(err);
     }
   });
-
+  pool.query(createStudent, function (err, results, fields) {
+    if (err) {
+      console.log(err);
+    }
+  });
 };
