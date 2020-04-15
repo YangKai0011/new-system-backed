@@ -3,9 +3,8 @@ var router = express.Router();
 const StudentCurd = require('../model/StudentCurd');
 const multer = require('multer');
 const fs = require('fs');
-const xlsx = require('xlsx');
 const excel = require('../lib/excel-utils');
-const img = require('../model/img');
+const readFile = require('../model/readFile');
 
 router.get('/', function (req, res, next) {
   const param = req.query;
@@ -78,27 +77,9 @@ router.post('/insert', multer({
 router.get('/download', (req, res, next) => {
   const param = req.query;
   if (param.type === 'excel') {
-    fs.readFile('./public/files/学生信息登记表.xlsx', (err, data) => {
-      if (err) {
-        res.send(err);
-      } else{
-        res.set('Content-Type', 'application/vnd.openxmlformats;charset=utf-8');
-        //设置下载文件名,中文文件名可以通过编码转换写入headr中
-        res.set("Content-Disposition", "attachment; filename=" + encodeURI('学生信息登记表') + ".xlsx");
-        res.end(data, 'binary');
-      }
-    })
+    readFile.readExcel('./public/files/学生信息登记表.xlsx',res);
   } else if(param.type === 'word'){
-    fs.readFile('./public/files/调宿信息登记表.docx', (err, data) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.set('Content-Type', 'application/vnd.openxmlformats;charset=utf-8');
-        //设置下载文件名,中文文件名可以通过编码转换写入headr中
-        res.set("Content-Disposition", "attachment; filename=" + encodeURI('调宿信息登记表') + ".docx");
-        res.end(data, 'binary');
-      }
-    })
+    readFile.readWord('./public/files/调宿信息登记表.docx',res);
   }
 
 });
