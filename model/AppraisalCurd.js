@@ -11,7 +11,7 @@ module.exports = {
 
     //插入宿舍评比信息
     insertApprisal(paramArr){
-        const sql = `INSERT INTO appraisal(buildNumber, dormitoryNumber, violations, neatItems, score,checkDate) VALUE(?,?,?,?,?,NOW());`;
+        const sql = `INSERT INTO appraisal(buildNumber, dormitoryNumber, violations, neatItems, score,checkDate,instructName)  SELECT ?,?,?,?,?,NOW(),instructName FROM student WHERE buildNumber = ? AND dormitoryNumber = ?;`;
         return (promise = new Promise((resolve, reject)=>{
             pool.query(sql, paramArr, callback(resolve, reject));
         }))

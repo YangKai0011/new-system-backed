@@ -7,8 +7,7 @@ router.post('/insertAppraisal', (req, res)=>{
     /* let violations = param.  + param. + param. + param.; */
     /* let neatItems = param. + param. + param. */
     /* let score = 100 - (violations + neatItems); */
-    let paramArr = [param.buildNumber,param.dormitoryNumber,violations,neatItems,score];
-    
+    let paramArr = [param.buildNumber,param.dormitoryNumber,violations,neatItems,score,param.buildNumber,param.dormitoryNumber];
     AppraisalCurd.insertApprisal(paramArr).then(data(req, res));
 });
 
