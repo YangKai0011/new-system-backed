@@ -3,6 +3,7 @@ var router = express.Router();
 const StudentCurd = require('../model/StudentCurd');
 const multer = require('multer');
 const fs = require('fs');
+const xlsx = require('xlsx');
 const excel = require('../lib/excel-utils');
 const img = require('../model/img');
 
@@ -35,14 +36,7 @@ router.get('/', function (req, res, next) {
         StudentCurd.findStubNameAndId(param).then(data(req, res));
       }
     }
-  } /* else if (param.type === 'updateNull') {
-    //完善信息
-    StudentCurd.insertMessage(param).then(data(req, res));
-  } *//*  else if (param.type === 'delete') {
-    
-    //删除信息
-    StudentCurd.deleteByStudentNumber(param).then(data(req, res));
-  } */
+  }
 });
 
 //删除和批量删除
@@ -80,13 +74,38 @@ router.post('/insert', multer({
   }
 });
 
+//下载信息表
+router.get('/download', (req, res, next) => {
+  const param = req.query;
+  if (param.type === 'excel') {
+    fs.readFile('./public/files/学生信息登记表.xlsx', (err, data) => {
+      if (err) {
+        res.send(err);
+      } else{
+        res.set('Content-Type', 'application/vnd.openxmlformats;charset=utf-8');
+        //设置下载文件名,中文文件名可以通过编码转换写入headr中
+        res.set("Content-Disposition", "attachment; filename=" + encodeURI('学生信息登记表') + ".xlsx");
+        res.end(data, 'binary');
+      }
+    })
+  } else if(param.type === 'word'){
+    fs.readFile('./public/files/调宿信息登记表.docx', (err, data) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.set('Content-Type', 'application/vnd.openxmlformats;charset=utf-8');
+        //设置下载文件名,中文文件名可以通过编码转换写入headr中
+        res.set("Content-Disposition", "attachment; filename=" + encodeURI('调宿信息登记表') + ".docx");
+        res.end(data, 'binary');
+      }
+    })
+  }
+
+});
+
 //导员修改信息
 router.post('/update', function (req, res) {
   const param = req.body;
-  /* [{ studentNumber: "00000000", buildNumber: "91", dormitoryNumber: '', profession: 'ads' }, { studentNumber: "00000001", profession: "afds" }]; */
-  console.log(param);
-
-  /* [{studentNumber: "00000000", profession: "软件1"},{studentNumber:"00000002", class:"软工"}]; */
   for (let i = 0; i < param.length; i++) {
     let sqlPinJie = null;
     let arrParam = [];
@@ -107,8 +126,8 @@ router.post('/update', function (req, res) {
     StudentCurd.updateMessage(sqlPinJie, arrParam).then(data(req, res));
   }
 });
-router.get('/instructMessage', (req, res, next) =>{
-  res.send({status:'/instructInsert', notAllowSpace: ['name','department','profession','grade','class'],allowSpace:['phoneNumber','instructName','instructPhone','buildNumber','dormitoryNumber','dormitoryLeader','LeaderPhone','fatherPhone','motherPhone']});
+router.get('/instructMessage', (req, res, next) => {
+  res.send({ status: '/instructInsert', invariable: ['name', 'department', 'profession', 'grade', 'class'], modify: ['phoneNumber', 'instructName', 'instructPhone', 'buildNumber', 'dormitoryNumber', 'dormitoryLeader', 'LeaderPhone', 'fatherPhone', 'motherPhone'], photo: 'photo' });
 });
 
 router.post('/instructInsert', multer({
@@ -123,7 +142,7 @@ router.post('/instructInsert', multer({
     let exts = file.originalname.split(".");
     let ext = exts[exts.length - 1]; //防止其余的点
     let number = Date.now();
-    fs.renameSync(file.path, 'public\\img\\' +number+'.'+ext);
+    fs.renameSync(file.path, 'public\\img\\' + number + '.' + ext);
     const param = req.body;
     param.photo = 'systm-backend\\public\\img\\' + number + '.' + ext;
     console.log(param.photo);
